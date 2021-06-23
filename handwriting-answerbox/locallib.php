@@ -15,12 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Internal library of functions for module newmodule
+ * Internal library of functions for module handwriting_answerbox
  *
- * All the newmodule specific functions, needed to implement the module
+ * All the handwriting_answerbox specific functions, needed to implement the module
  * logic, should go here. Never include this file from your lib.php!
  *
- * @package    mod_newmodule
+ * @package    mod_handwriting_answerbox
  * @copyright  2016 Your Name <your@email.address>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @param array $things
  * @return object
- *function newmodule_do_something_useful(array $things) {
+ *function handwriting_answerbox_do_something_useful(array $things) {
  *    return new stdClass();
  *}
  */

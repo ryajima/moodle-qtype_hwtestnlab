@@ -20,12 +20,12 @@
  * You can have a rather longer description of the file as well,
  * if you like, and it can span multiple lines.
  *
- * @package    mod_newmodule
+ * @package    mod_handwriting_answerbox
  * @copyright  2016 Your Name <your@email.address>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// Replace newmodule with the name of your module and remove this line.
+// Replace handwriting_answerbox with the name of your module and remove this line.
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
@@ -39,12 +39,12 @@ require_course_login($course);
 $params = array(
     'context' => context_course::instance($course->id)
 );
-$event = \mod_newmodule\event\course_module_instance_list_viewed::create($params);
+$event = \mod_handwriting_answerbox\event\course_module_instance_list_viewed::create($params);
 $event->add_record_snapshot('course', $course);
 $event->trigger();
 
-$strname = get_string('modulenameplural', 'mod_newmodule');
-$PAGE->set_url('/mod/newmodule/index.php', array('id' => $id));
+$strname = get_string('modulenameplural', 'mod_handwriting_answerbox');
+$PAGE->set_url('/mod/handwriting_answerbox/index.php', array('id' => $id));
 $PAGE->navbar->add($strname);
 $PAGE->set_title("$course->shortname: $strname");
 $PAGE->set_heading($course->fullname);
@@ -53,8 +53,8 @@ $PAGE->set_pagelayout('incourse');
 echo $OUTPUT->header();
 echo $OUTPUT->heading($strname);
 
-if (! $newmodules = get_all_instances_in_course('newmodule', $course)) {
-    notice(get_string('nonewmodules', 'newmodule'), new moodle_url('/course/view.php', array('id' => $course->id)));
+if (! $handwriting_answerboxs = get_all_instances_in_course('handwriting_answerbox', $course)) {
+    notice(get_string('nohandwriting_answerboxs', 'handwriting_answerbox'), new moodle_url('/course/view.php', array('id' => $course->id)));
 }
 
 $usesections = course_format_uses_sections($course->format);
@@ -73,7 +73,7 @@ if ($usesections) {
 
 $modinfo = get_fast_modinfo($course);
 $currentsection = '';
-foreach ($modinfo->instances['newmodule'] as $cm) {
+foreach ($modinfo->instances['handwriting_answerbox'] as $cm) {
     $row = array();
     if ($usesections) {
         if ($cm->sectionnum !== $currentsection) {

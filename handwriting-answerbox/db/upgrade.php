@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file keeps track of upgrades to the newmodule module
+ * This file keeps track of upgrades to the handwriting_answerbox module
  *
  * Sometimes, changes between versions involve alterations to database
  * structures and other major things that may break installations. The upgrade
@@ -24,7 +24,7 @@
  * it cannot do itself, it will tell you what you need to do.  The commands in
  * here will all be database-neutral, using the functions defined in DLL libraries.
  *
- * @package    mod_newmodule
+ * @package    mod_handwriting_answerbox
  * @copyright  2016 Your Name <your@email.address>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -32,12 +32,12 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Execute newmodule upgrade from the given old version
+ * Execute handwriting_answerbox upgrade from the given old version
  *
  * @param int $oldversion
  * @return bool
  */
-function xmldb_newmodule_upgrade($oldversion) {
+function xmldb_handwriting_answerbox_upgrade($oldversion) {
     global $DB;
 
     $dbman = $DB->get_manager(); // Loads ddl manager and xmldb classes.
@@ -53,10 +53,10 @@ function xmldb_newmodule_upgrade($oldversion) {
      *
      * Lines below (this included)  MUST BE DELETED once you get the first version
      * of your module ready to be installed. They are here only
-     * for demonstrative purposes and to show how the newmodule
+     * for demonstrative purposes and to show how the handwriting_answerbox
      * iself has been upgraded.
      *
-     * For each upgrade block, the file newmodule/version.php
+     * For each upgrade block, the file handwriting_answerbox/version.php
      * needs to be updated . Such change allows Moodle to know
      * that this file has to be processed.
      *
@@ -70,8 +70,8 @@ function xmldb_newmodule_upgrade($oldversion) {
      */
     if ($oldversion < 2007040100) {
 
-        // Define field course to be added to newmodule.
-        $table = new xmldb_table('newmodule');
+        // Define field course to be added to handwriting_answerbox.
+        $table = new xmldb_table('handwriting_answerbox');
         $field = new xmldb_field('course', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'id');
 
         // Add field course.
@@ -79,8 +79,8 @@ function xmldb_newmodule_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // Define field intro to be added to newmodule.
-        $table = new xmldb_table('newmodule');
+        // Define field intro to be added to handwriting_answerbox.
+        $table = new xmldb_table('handwriting_answerbox');
         $field = new xmldb_field('intro', XMLDB_TYPE_TEXT, 'medium', null, null, null, null, 'name');
 
         // Add field intro.
@@ -88,8 +88,8 @@ function xmldb_newmodule_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // Define field introformat to be added to newmodule.
-        $table = new xmldb_table('newmodule');
+        // Define field introformat to be added to handwriting_answerbox.
+        $table = new xmldb_table('handwriting_answerbox');
         $field = new xmldb_field('introformat', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0',
             'intro');
 
@@ -100,7 +100,7 @@ function xmldb_newmodule_upgrade($oldversion) {
 
         // Once we reach this point, we can store the new version and consider the module
         // ... upgraded to the version 2007040100 so the next time this block is skipped.
-        upgrade_mod_savepoint(true, 2007040100, 'newmodule');
+        upgrade_mod_savepoint(true, 2007040100, 'handwriting_answerbox');
     }
 
     // Second example, some hours later, the same day 2007/04/01
@@ -108,8 +108,8 @@ function xmldb_newmodule_upgrade($oldversion) {
     // ... "01" in the last two digits of the version).
     if ($oldversion < 2007040101) {
 
-        // Define field timecreated to be added to newmodule.
-        $table = new xmldb_table('newmodule');
+        // Define field timecreated to be added to handwriting_answerbox.
+        $table = new xmldb_table('handwriting_answerbox');
         $field = new xmldb_field('timecreated', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0',
             'introformat');
 
@@ -118,8 +118,8 @@ function xmldb_newmodule_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // Define field timemodified to be added to newmodule.
-        $table = new xmldb_table('newmodule');
+        // Define field timemodified to be added to handwriting_answerbox.
+        $table = new xmldb_table('handwriting_answerbox');
         $field = new xmldb_field('timemodified', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0',
             'timecreated');
 
@@ -128,8 +128,8 @@ function xmldb_newmodule_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // Define index course (not unique) to be added to newmodule.
-        $table = new xmldb_table('newmodule');
+        // Define index course (not unique) to be added to handwriting_answerbox.
+        $table = new xmldb_table('handwriting_answerbox');
         $index = new xmldb_index('courseindex', XMLDB_INDEX_NOTUNIQUE, array('course'));
 
         // Add index to course field.
@@ -138,7 +138,7 @@ function xmldb_newmodule_upgrade($oldversion) {
         }
 
         // Another save point reached.
-        upgrade_mod_savepoint(true, 2007040101, 'newmodule');
+        upgrade_mod_savepoint(true, 2007040101, 'handwriting_answerbox');
     }
 
     // Third example, the next day, 2007/04/02 (with the trailing 00),
@@ -147,7 +147,7 @@ function xmldb_newmodule_upgrade($oldversion) {
 
         // Insert code here to perform some actions (same as in install.php).
 
-        upgrade_mod_savepoint(true, 2007040200, 'newmodule');
+        upgrade_mod_savepoint(true, 2007040200, 'handwriting_answerbox');
     }
 
     /*

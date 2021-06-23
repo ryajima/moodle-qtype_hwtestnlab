@@ -15,21 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * The mod_newmodule instance list viewed event.
+ * The mod_handwriting-answerbox instance list viewed event.
  *
- * @package    mod_newmodule
+ * @package    mod_handwriting_answerbox
  * @copyright  2016 Your Name <your@email.address>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_newmodule\event;
+namespace mod_handwriting_answerbox\event;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * The mod_newmodule instance list viewed event class.
+ * The mod_handwriting_answerbox instance list viewed event class.
  *
- * @package    mod_newmodule
+ * @package    mod_handwriting_answerbox
  * @copyright  2016 Your Name <your@email.address>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
