@@ -2,11 +2,11 @@
 
 ## Outline
 
-This system is a web testting tool for collecting handwriting answers.
+This system is a Moodle plugin for handwriting answers.
 
 ## Usage
 
-1. Put images of each questions in the directory below, and change the filename to qx.png (ex. q1.png, q2.png, ...).
+1. 
    `(DIRECTORY_YOU_INSTALLED)/img/question`
 2. Change a parameter of questions in `js/questions.js` (line 9).
 
