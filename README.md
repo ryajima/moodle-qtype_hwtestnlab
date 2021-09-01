@@ -2,20 +2,13 @@
 
 ## Outline
 
-This system is a web testting tool for collecting handwriting answers.
+The Nakagawa-Handwriting-Answerbox Extention is a short-answer testing tool on moodle.
+It support English, Japanese and math.
 
-## Usage
+## Install
 
-1. Put images of each questions in the directory below, and change the filename to qx.png (ex. q1.png, q2.png, ...).
-   `(DIRECTORY_YOU_INSTALLED)/img/question`
-2. Change a parameter of questions in `js/questions.js` (line 9).
-
-```
-//mumber of questions, change if you make new test.
-const NUM_Q = 1;
-```
-
-3. Access with a web browser.
+1. type this command in the root your Moodle install:
+   `git clone https://github.com/ryajima/Handwriting-Answerbox-Extention /question/type/hwtest-nlab`
 
 ## license 
 
@@ -25,5 +18,5 @@ GNU GPL v3 or later
 
 Ryo YAJIMA (escaryo21work@gmail.com)
 
-(2021/05/25)
+(2021 Sep. 1st)
 
