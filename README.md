@@ -1,4 +1,4 @@
-# HANDWRITING-TESTING-EXTEMTION
+# HANDWRITING-TESTING-EXTENTION
 
 ## Outline
 
@@ -8,7 +8,7 @@ It support English, Japanese and math.
 ## Install
 
 1. type this command in the root your Moodle install:
-   `git clone https://github.com/ryajima/Handwriting-Answerbox-Extention /question/type/hwtest-nlab`
+   `git clone https://github.com/ryajima/moodle-qtype_hwtestnlab.git question/type/hwtestnlab`
 
 ## license 
 
