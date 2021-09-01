@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * hwtestnlab question type version information.
+ * Strings for component 'qtype_hwtestnlab', language 'en', branch 'MOODLE_20_STABLE'
  *
  * @package    qtype
  * @subpackage hwtestnlab
@@ -23,12 +23,9 @@
 
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->component = 'qtype_hwtestnlab';
-$plugin->version   = 2013012900;
-
-$plugin->requires  = 2012062504;
-
-$plugin->maturity  = MATURITY_ALPHA;
+$string['pluginname'] = 'hwtestnlab';
+$string['pluginname_help'] = 'Create a hwtestnlab question type with insert question description here.';
+$string['pluginname_link'] = 'question/type/hwtestnlab';
+$string['pluginnameadding'] = 'Adding a hwtestnlab question';
+$string['pluginnameediting'] = 'Editing a hwtestnlab question';
+$string['pluginnamesummary'] = 'A hwtestnlab question type that allows something to be done that can test a student on some understanding.';

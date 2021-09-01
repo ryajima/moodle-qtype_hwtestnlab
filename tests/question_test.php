@@ -13,30 +13,31 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Provides code to be executed during the module installation
+ * Contains the helper class for the select missing words question type tests.
  *
- * This file replaces the legacy STATEMENTS section in db/install.xml,
- * lib.php/modulename_install() post installation hook and partially defaults.php.
- *
- * @package    mod_handwriting_answerbox
- * @copyright  2016 Your Name <your@email.address>
+ * @package    qtype
+ * @copyright  Year TUAT_Nakagawa_Lab.,NIER
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
+global $CFG;
+require_once($CFG->dirroot . '/question/type/questionbase.php');
+require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
+require_once($CFG->dirroot . '/question/type/YOURQTYPE/question.php');
 /**
- * Post installation procedure
+ * Unit tests for the YOURQTYPE question definition class.
  *
- * @see upgrade_plugins_modules()
+ * @copyright  2012 Marcus Green
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-function xmldb_handwriting_answerbox_install() {
-}
+class qtype_YOURQTYPE_question_test extends advanced_testcase {
+  
+      public function test_get_expected_data() {
+    }
+  
+      public function test_compute_final_grade() {
 
-/**
- * Post installation recovery procedure
- *
- * @see upgrade_plugins_modules()
- */
-function xmldb_handwriting_answerbox_install_recovery() {
+    }
 }

@@ -15,34 +15,41 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines the view event.
+ * Mobile output class for qtype_hwtestnlab
  *
- * @package    mod_handwriting_answerbox
- * @copyright  2016 Your Name <your@email.address>
+ * @package    qtype_hwtestnlab
+ * @copyright  2018 YOUR NAME
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_handwriting_answerbox\event;
+namespace qtype_hwtestnlab\output;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * The mod_handwriting_answerbox instance viewed event class
+ * Mobile output class for hwtestnlab question type
  *
- * If the view mode needs to be stored as well, you may need to
- * override methods get_url() and get_legacy_log_data(), too.
- *
- * @package    mod_handwriting_answerbox
- * @copyright  2016 Your Name <your@email.address>
+ * @package    qtype_hwtestnlab
+ * @copyright  20XX YOUR NAME
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class course_module_viewed extends \core\event\course_module_viewed {
+class mobile {
 
     /**
-     * Initialize the event
+     * Returns the hwtestnlab question type for the quiz the mobile app.
+     *
+     * @return void
      */
-    protected function init() {
-        $this->data['objecttable'] = 'handwriting_answerbox';
-        parent::init();
+    public static function mobile_get_hwtestnlab() {
+        global $CFG;
+        return [
+            'templates' => [
+                [
+                    'id' => 'main',
+                    'html' => file_get_contents($CFG->dirroot .'/question/type/hwtestnlab/mobile/qtype-hwtestnlab.html')
+                    ]
+            ],
+            'javascript' => file_get_contents($CFG->dirroot . '/question/type/hwtestnlab/mobile/mobile.js')
+        ];
     }
 }

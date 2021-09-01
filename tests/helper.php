@@ -13,25 +13,11 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * The mod_handwriting-answerbox instance list viewed event.
+ * Contains the helper class for the select missing words question type tests.
  *
- * @package    mod_handwriting_answerbox
- * @copyright  2016 Your Name <your@email.address>
+ * @package    qtype
+ * @copyright  Year TUAT_Nakagawa_Lab.,NIER
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace mod_handwriting_answerbox\event;
-
 defined('MOODLE_INTERNAL') || die();
-
-/**
- * The mod_handwriting_answerbox instance list viewed event class.
- *
- * @package    mod_handwriting_answerbox
- * @copyright  2016 Your Name <your@email.address>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class course_module_instance_list_viewed extends \core\event\course_module_instance_list_viewed {
-}

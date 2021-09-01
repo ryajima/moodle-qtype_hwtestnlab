@@ -1,8 +1,8 @@
-# HANDWRITING-ANSWERBOX-EXTEMTION
+# HANDWRITING-TESTING-EXTEMTION
 
 ## Outline
 
-The Nakagawa-Handwriting-Answerbox Extention is a short-answer testing tool on moodle.
+The Handwriting-testing Extention from Nakagawa-Lab. is a short-answer testing tool on moodle.
 It support English, Japanese and math.
 
 ## Install

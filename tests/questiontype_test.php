@@ -13,20 +13,11 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Provides code to be executed during the module uninstallation
+ * Contains the helper class for the select missing words question type tests.
  *
- * @see uninstall_plugin()
- *
- * @package    mod_handwriting_answerbox
- * @copyright  2016 Your Name <your@email.address>
+ * @package    qtype
+ * @copyright  Year TUAT_Nakagawa_Lab.,NIER
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-/**
- * Custom uninstallation procedure
- */
-function xmldb_handwriting_answerbox_uninstall() {
-    return true;
-}
+defined('MOODLE_INTERNAL') || die();

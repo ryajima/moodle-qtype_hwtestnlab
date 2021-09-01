@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/handwriting_answerbox/db" VERSION="20101203" COMMENT="XMLDB file for Moodle mod/handwriting_answerbox"
+<XMLDB PATH="question/type/hwtestnlab/db" VERSION="2013070" COMMENT="XMLDB file for Moodle question/type/hwtestnlab"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+    xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="handwriting_answerbox" COMMENT="Default comment for handwriting_answerbox, please edit me">
+    <TABLE NAME="question_hwtestnlab" COMMENT="description of table, e.g. options associated overall question">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>
-        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Course handwriting_answerbox activity belongs to"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="name field for moodle instances"/>
-        <FIELD NAME="intro" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="General introduction of the handwriting_answerbox activity"/>
-        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Format of the intro field (MOODLE, HTML, MARKDOWN...)"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="100" SEQUENCE="false" COMMENT="The maximum grade. Can be negative to indicate the use of a scale."/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="question"/>
+        <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Foreign key references question.id" />
+        <FIELD NAME="correctfeedback" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="correctfeedbackformat" TYPE="int" LENGTH="2" NOTNULL="false" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="partiallycorrectfeedback" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="partiallycorrectfeedbackformat" TYPE="int" LENGTH="2" NOTNULL="false" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="incorrectfeedback" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="incorrectfeedbackformat" TYPE="int" LENGTH="2" NOTNULL="false" DEFAULT="0" SEQUENCE="false" />
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
-      </INDEXES>
+        <KEY NAME="questionid" TYPE="foreign" FIELDS="questionid" REFTABLE="question" REFFIELDS="id"  />
+       </KEYS>
     </TABLE>
   </TABLES>
 </XMLDB>
