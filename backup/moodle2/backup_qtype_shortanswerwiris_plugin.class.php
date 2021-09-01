@@ -14,13 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Plugin administration pages are defined here.
- *
- * @package     
- * @category    
- * @copyright   
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 defined('MOODLE_INTERNAL') || die();
+
+
+class backup_qtype_hwtestnlab_plugin extends backup_qtype_shortanswer_plugin {
+
+    protected function define_question_plugin_structure() {
+        // Call parent.
+        $plugin = parent::define_question_plugin_structure();
+
+        // Change type.
+        $plugin->set_condition('../../qtype', 'hwtestnlab');
+
+        // Add question_xml.
+        $pluginwrapper = $plugin->get_child($this->get_recommended_name());
+        $questionxml = new backup_nested_element('question_xml', array('id'), array('xml'));
+        $pluginwrapper->add_child($questionxml);
+        $questionxml->set_source_table('qtype_wq', array('question' => backup::VAR_PARENTID));
+
+        return $plugin;
+    }
+
+}

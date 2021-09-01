@@ -14,21 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * hwtestnlab question type version information.
- *
- * @package    qtype
- * @subpackage hwtestnlab
- * @copyright  2021 TUAT_Nakagawa_Lab.,NIER (escaryo21work@gmail.com)
-
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 defined('MOODLE_INTERNAL') || die();
 
+$plugin->version = 2021050700;
+$plugin->release = '4.2.7';
+$plugin->requires = 2011060313;
+$plugin->maturity = MATURITY_RC;
 $plugin->component = 'qtype_hwtestnlab';
-$plugin->version   = 2013012900;
-
-$plugin->requires  = 2012062504;
-
-$plugin->maturity  = MATURITY_ALPHA;
+$plugin->dependencies = array (
+     'qtype_wq' => 2021050700
+);

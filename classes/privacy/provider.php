@@ -13,11 +13,34 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Contains the helper class for the select missing words question type tests.
+ * Privacy class for Wiris Quizzes Short-Answer question type.
  *
- * @package    qtype
- * @copyright  Year TUAT_Nakagawa_Lab.,NIER
+ * @package    qtype_hwtestnlab
+ * @copyright  WIRIS Europe (Maths for more S.L)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace qtype_hwtestnlab\privacy;
+
 defined('MOODLE_INTERNAL') || die();
+
+class provider implements
+    // This plugin does not store any personal user data.
+    \core_privacy\local\metadata\null_provider
+{
+    use \core_privacy\local\legacy_polyfill;
+
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    // @codingStandardsIgnoreStart
+    public static function _get_reason() {
+        // @codingStandardsIgnoreEnd
+        return 'privacy:null_reason';
+    }
+}
