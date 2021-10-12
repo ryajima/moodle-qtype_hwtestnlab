@@ -18,7 +18,7 @@
  * Mobile output class for qtype_hwtestnlab
  *
  * @package    qtype_hwtestnlab
- * @copyright  2018 YOUR NAME
+ * @copyright  2021 Ryo YAJIMA
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
  * Mobile output class for hwtestnlab question type
  *
  * @package    qtype_hwtestnlab
- * @copyright  20XX YOUR NAME
+ * @copyright  2021 Ryo YAJIMA
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mobile {

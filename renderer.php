@@ -14,97 +14,55 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * hwtestnlab question renderer class.
+ *
+ * @package    qtype
+ * @subpackage hwtestnlab
+ * @copyright  2021 Ryo YAJIMA (escaryo21work@gmail.com)
+
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+
 defined('MOODLE_INTERNAL') || die();
-require_once($CFG->dirroot . '/question/type/shortanswer/renderer.php');
-require_once($CFG->dirroot . '/question/type/wq/renderer.php');
 
-class qtype_hwtestnlab_renderer extends qtype_wq_renderer {
-    public function __construct(moodle_page $page, $target) {
-        parent::__construct(new qtype_shortanswer_renderer($page, $target), $page, $target);
-    }
 
-    public function formulation_and_controls(question_attempt $qa, question_display_options $options) {
+/**
+ * Generates the output for hwtestnlab questions.
+ *
+ * @copyright  2021 Ryo YAJIMA (escaryo21work@gmail.com)
+
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class qtype_hwtestnlab_renderer extends qtype_renderer {
+    public function formulation_and_controls(question_attempt $qa,
+            question_display_options $options) {
 
         $question = $qa->get_question();
-        $currentanswer = $qa->get_last_qt_var('answer');
-
-        $inputname = $qa->get_qt_field_name('answer');
-
-        $inputattributes = array(
-            'type' => 'text',
-            'name' => $inputname,
-            'value' => $currentanswer,
-            'id' => $inputname,
-            'size' => 80,
-            'style' => 'display:none;',
-            'class' => 'wirisanswerfield',
-        );
-        if ($options->readonly) {
-            $inputattributes['class'] .= ' wirisreadonly';
-            $inputattributes['readonly'] = 'readonly';
-        }
-
-        $feedbackimg = '';
-
-        if ($options->correctness) {
-            $answer = $question->get_matching_answer(array('answer' => $currentanswer));
-            $fraction = $answer ? $answer->fraction : 0;
-            $inputattributes['class'] .= ' wirisembeddedfeedback ' . $this->feedback_class($fraction);
-            // Feedback image delegate to wirisembeddedfeedback class.
-        }
 
         $questiontext = $question->format_questiontext($qa);
-
-        $input = html_writer::empty_tag('input', $inputattributes) . $feedbackimg;
-
+       
         $result = html_writer::tag('div', $questiontext, array('class' => 'qtext'));
+        /* Some code to restore the state of the question as you move back and forth
+        from one question to another in a quiz and some code to disable the input fields
+        once a quesiton is submitted/marked */
 
-        $result .= html_writer::start_tag('div', array('class' => 'ablock'));
-        $result .= $this->auxiliar_cas();
-        $result .= html_writer::tag('label', get_string('answer', 'qtype_shortanswer',
-                html_writer::tag('span', $input, array('class' => 'answer'))), array('for' => $inputattributes['id']));
-        $result .= html_writer::end_tag('div');
-
-        if ($qa->get_state() == question_state::$invalid) {
+        /* if ($qa->get_state() == question_state::$invalid) {
             $result .= html_writer::nonempty_tag('div',
-                    $question->get_validation_error(array('answer' => $currentanswer)), array('class' => 'validationerror'));
-        }
-
-        // Auxiliar text.
-        $slots = $qa->get_question()->wirisquestion->question->getSlots();
-        if (isset($slots[0])) {
-            $showauxiliartextinput = $slots[0]->getProperty(com_wiris_quizzes_api_PropertyName::$SHOW_AUXILIARY_TEXT_INPUT); // @codingStandardsIgnoreLine
-        } else {
-            $showauxiliartextinput = $qa->get_question()->wirisquestion->question->getProperty(com_wiris_quizzes_api_PropertyName::$SHOW_AUXILIARY_TEXT_INPUT); // @codingStandardsIgnoreLine
-        }
-
-        if ($showauxiliartextinput == "true") {
-            $result .= $this->auxiliar_text($qa, $options);
-        }
-
-        $result .= $this->add_javascript();
-        $result .= $this->lang();
-        $result .= $this->question($qa);
-        $result .= $this->question_instance($qa);
-
+                    $question->get_validation_error(array('answer' => $currentanswer)),
+                    array('class' => 'validationerror'));
+        }*/
         return $result;
     }
 
-    public function correct_response(question_attempt $qa) {
-        $question = $qa->get_question();
-        $answer = $question->get_correct_response();
-        if (!$answer) {
-            return '';
-        }
-        $wrap = com_wiris_system_CallWrapper::getInstance();
-        $wrap->start();
-        $filterableanswer = com_wiris_quizzes_impl_QuizzesImpl::getInstance()->answerToFilterableValue($answer['answer']);
-        $wrap->stop();
-        $text = get_string('correctansweris', 'qtype_shortanswer', $filterableanswer);
-        return $question->format_text($text, FORMAT_HTML, $qa, 'question', 'correctanswer', $question->id);
+    public function specific_feedback(question_attempt $qa) {
+        // TODO.
+        return '';
     }
 
-    public function feedback_class($fraction) {
-        return 'wiris' . parent::feedback_class($fraction);
+    public function correct_response(question_attempt $qa) {
+        // TODO.
+        return '';
     }
 }

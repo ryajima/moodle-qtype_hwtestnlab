@@ -14,245 +14,119 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Question type class for the hwtestnlab question type.
+ *
+ * @package    qtype
+ * @subpackage hwtestnlab
+ * @copyright  2021 Ryo YAJIMA (escaryo21work@gmail.com)
+
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+ 
+ /*https://docs.moodle.org/dev/Question_types#Question_type_and_question_definition_classes*/
+
+
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/question/type/wq/questiontype.php');
-require_once($CFG->dirroot . '/question/type/shortanswer/questiontype.php');
-require_once($CFG->dirroot . '/question/type/wq/quizzes/quizzes.php');
-require_once($CFG->dirroot . '/question/type/hwtestnlab/lib.php');
+require_once($CFG->libdir . '/questionlib.php');
+require_once($CFG->dirroot . '/question/engine/lib.php');
+require_once($CFG->dirroot . '/question/type/hwtestnlab/question.php');
 
-class qtype_hwtestnlab extends qtype_wq {
 
-    public function __construct() {
-        parent::__construct(new qtype_shortanswer());
-    }
+/**
+ * The hwtestnlab question type.
+ *
+ * @copyright  2021 Ryo YAJIMA (escaryo21work@gmail.com)
 
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class qtype_hwtestnlab extends question_type {
+
+      /* ties additional table fields to the database */
     public function extra_question_fields() {
-        return array('qtype_shortanswer_options', 'usecase');
+        return array('question_hwtestnlab', 'somefieldname','anotherfieldname');
+    }
+    public function move_files($questionid, $oldcontextid, $newcontextid) {
+        parent::move_files($questionid, $oldcontextid, $newcontextid);
+        $this->move_files_in_hints($questionid, $oldcontextid, $newcontextid);
     }
 
-    public function create_editing_form($submiturl, $question, $category, $contexts, $formeditable) {
-        global $CFG;
-        require_once($CFG->dirroot . '/question/type/hwtestnlab/edit_hwtestnlab_form.php');
-        $wform = new qtype_hwtestnlab_helper_edit_form($submiturl, $question, $category, $contexts, $formeditable);
-        return new qtype_hwtestnlab_edit_form($wform, $submiturl, $question, $category, $contexts, $formeditable);
+    protected function delete_files($questionid, $contextid) {
+        parent::delete_files($questionid, $contextid);
+        $this->delete_files_in_hints($questionid, $contextid);
     }
-    public function initialise_question_instance(question_definition $question, $questiondata) {
+     /**
+     * @param stdClass $question
+     * @param array $form
+     * @return object
+     */
+    public function save_question($question, $form) {
+        return parent::save_question($question, $form);
+    }
+    public function save_question_options($question) {
+        global $DB;
+        $options = $DB->get_record('question_hwtestnlab', array('questionid' => $question->id));
+        if (!$options) {
+            $options = new stdClass();
+            $options->questionid = $question->id;
+            /* add any more non combined feedback fields here */
+            $options->id = $DB->insert_record('question_imageselect', $options);
+        }
+        $options = $this->save_combined_feedback_helper($options, $question, $question->context, true);
+        $DB->update_record('question_hwtestnlab', $options);
+        $this->save_hints($question);
+    }
+
+ /* 
+ * populates fields such as combined feedback 
+ * also make $DB calls to get data from other tables
+ */
+   public function get_question_options($question) {
+     //TODO
+       parent::get_question_options($question);
+    }
+
+ /**
+ * executed at runtime (e.g. in a quiz or preview 
+ **/
+    protected function initialise_question_instance(question_definition $question, $questiondata) {
         parent::initialise_question_instance($question, $questiondata);
-        $question->answers = &$question->base->answers;
+        $this->initialise_question_answers($question, $questiondata);
+        parent::initialise_combined_feedback($question, $questiondata);
     }
-
-    public function export_to_xml($question, qformat_xml $format, $extra=null) {
-        $expout = "    <usecase>{$question->options->usecase}</usecase>\n";
-        $expout .= $format->write_answers($question->options->answers);
-        $expout .= parent::export_to_xml($question, $format);
-        return $expout;
+    
+   public function initialise_question_answers(question_definition $question, $questiondata,$forceplaintextanswers = true){ 
+     //TODO
     }
-
-    public function import_from_xml($data, $question, qformat_xml $format, $extra=null) {
-        $wrap = com_wiris_system_CallWrapper::getInstance();
-
-        if (isset($question) && $question == 0) {
+    
+    public function import_from_xml($data, $question, qformat_xml $format, $extra = null) {
+        if (!isset($data['@']['type']) || $data['@']['type'] != 'question_hwtestnlab') {
             return false;
         }
-        if (isset($data['#']['wirisquestion']) && substr($data['#']['wirisquestion'][0]['#'], 0, 9) == '«session') {
-            // Import from Moodle 1.x.
-            $iscompound = false;
-
-            if (isset($data['#']['wiriseditor'])) {
-                $wiriseditor = array();
-                parse_str($data['#']['wiriseditor'][0]['#'], $wiriseditor);
-                if (isset($wiriseditor['multipleAnswers']) && $wiriseditor['multipleAnswers'] == true) {
-                    if (isset($wiriseditor['testFunctionName'])) {
-                        $msg = '<p><strong>' . get_string('warning') . '</strong>:<br />';
-                        $msg .= '<em>' . $data['#']['name'][0]['#']['text'][0]['#'] . '</em><br />';
-                        $msg .= get_string('hwtestnlab_cantimportcompoundtest', 'qtype_hwtestnlab');
-                        $msg .= '</p>';
-                        echo $msg;
-                    }
-                    $iscompound = true;
-                }
-            }
-
-            $text = $data['#']['questiontext'][0]['#']['text'][0]['#'];
-            $text = $this->wrsqz_adapttext($text);
-            $data['#']['questiontext'][0]['#']['text'][0]['#'] = $text;
-            $answers = $data['#']['answer'];
-            foreach ($answers as $key => $value) {
-                $text = $answers[$key]['#']['feedback'][0]['#']['text'][0]['#'];
-                $text = $this->wrsqz_adapttext($text);
-                $data['#']['answer'][$key]['#']['feedback'][0]['#']['text'][0]['#'] = $text;
-                if ($iscompound) {
-                    // Compound answers
-                    // $originaltext will be used to check if there's a distribution.
-                    $originaltext = $answers[$key]['#']['text'][0]['#'];
-                    $text = wrsqz_convert_for_compound($originaltext);
-                    $data['#']['answer'][$key]['#']['text'][0]['#'] = $text;
-                }
-            }
-            $text = $data['#']['generalfeedback'][0]['#']['text'][0]['#'];
-            $text = $this->wrsqz_adapttext($text);
-            $data['#']['generalfeedback'][0]['#']['text'][0]['#'] = $text;
-            $qo = parent::import_from_xml($data, $question, $format, $extra);
-            $wirisquestion = '<question><wirisCasSession>';
-            $wirisquestiondecoded = $this->wrsqz_mathml_decode(trim($data['#']['wirisquestion'][0]['#']));
-            $wirisquestion .= htmlspecialchars($wirisquestiondecoded, ENT_COMPAT, "UTF-8");
-            $wirisquestion .= '</wirisCasSession>';
-
-            $wirisquestion .= '<correctAnswers>';
-
-            foreach ($data['#']['answer'] as $key => $value) {
-                $answertext = $value['#']['text'][0]['#'];
-                $wirisquestion .= '<correctAnswer type="mathml">';
-                if ($iscompound) {
-                    $wirisquestion .= htmlspecialchars($answertext, ENT_COMPAT, "UTF-8");
-                } else {
-                    $wirisquestion .= $answertext;
-                }
-                $wirisquestion .= '</correctAnswer>';
-            }
-
-            $wirisquestion .= '</correctAnswers>';
-
-            if (isset($data['#']['wiriseditor'])) {
-
-                $wiriseditor = array();
-                parse_str($data['#']['wiriseditor'][0]['#'], $wiriseditor);
-
-                if (count($wiriseditor) > 0) {
-                    // Grade function.
-                    $wrap->start();
-                    $wirisquestion .= '<assertions>';
-                    if (isset($wiriseditor['testFunctionName'])) {
-                        foreach ($answers as $key => $value) {
-                            // @codingStandardsIgnoreStart
-                            $wirisquestion .= '<assertion name="' .
-                                    com_wiris_quizzes_impl_Assertion::$SYNTAX_EXPRESSION . '" correctAnswer="' . $key . '"/>';
-                        }
-                            // @codingStandardsIgnoreEnd
-                        foreach ($wiriseditor['testFunctionName'] as $key => $value) {
-                            // @codingStandardsIgnoreStart
-                            $wirisquestion .= '<assertion name="' .
-                                    com_wiris_quizzes_impl_Assertion::$EQUIVALENT_FUNCTION . '" correctAnswer="' . $key . '">';
-                            // @codingStandardsIgnoreEnd
-                            if (substr($value, 0, 1) == '#') {
-                                $value = substr($value, 1);
-                            }
-                            $wirisquestion .= '<param name="name">' . $value . '</param>';
-                            $wirisquestion .= '</assertion>';
-                        }
-                    } else {
-                        foreach ($answers as $key => $value) {
-                            // @codingStandardsIgnoreStart
-                            $wirisquestion .= '<assertion name="' .
-                                    com_wiris_quizzes_impl_Assertion::$SYNTAX_EXPRESSION. '" correctAnswer="' . $key . '"/>';
-                            $wirisquestion .= '<assertion name="' .
-                                    com_wiris_quizzes_impl_Assertion::$EQUIVALENT_SYMBOLIC . '" correctAnswer="' . $key . '"/>';
-                            // @codingStandardsIgnoreEnd
-                        }
-                    }
-                    $wirisquestion .= '</assertions>';
-                    $wrap->stop();
-
-                    // Editor and compound answer.
-                    $wirisquestion .= '<localData>';
-                    if (!$iscompound) {
-                        if (isset($wiriseditor['editor']) && $wiriseditor['editor'] == true) {
-                            // @codingStandardsIgnoreStart
-                            $wirisquestion .= '<data name="' . com_wiris_quizzes_api_QuizzesConstants::$PROPERTY_ANSWER_FIELD_TYPE . '">';
-                            $wirisquestion .= com_wiris_quizzes_api_QuizzesConstants::$ANSWER_FIELD_TYPE_INLINE_EDITOR;
-                            // @codingStandardsIgnoreEnd
-                            $wirisquestion .= '</data>';
-                        } else {
-                            // @codingStandardsIgnoreStart
-                            $wirisquestion .= '<data name="' . com_wiris_quizzes_api_QuizzesConstants::$PROPERTY_ANSWER_FIELD_TYPE . '">';
-                            $wirisquestion .= com_wiris_quizzes_api_QuizzesConstants::$ANSWER_FIELD_TYPE_TEXT;
-                            // @codingStandardsIgnoreEnd
-                            $wirisquestion .= '</data>';
-                        }
-                    } else {
-                        // For compound answer set as default Popup editor.
-                        // @codingStandardsIgnoreStart
-                        $wirisquestion .= '<data name="' . com_wiris_quizzes_api_QuizzesConstants::$PROPERTY_ANSWER_FIELD_TYPE . '">';
-                        $wirisquestion .= com_wiris_quizzes_api_QuizzesConstants::$ANSWER_FIELD_TYPE_POPUP_EDITOR;
-                        // @codingStandardsIgnoreEnd
-                        $wirisquestion .= '</data>';
-
-                        // @codingStandardsIgnoreStart
-                        $wirisquestion .= '<data name="' . com_wiris_quizzes_api_QuizzesConstants::$PROPERTY_COMPOUND_ANSWER_GRADE . '">';
-                        $wirisquestion .= com_wiris_quizzes_api_QuizzesConstants::$PROPERTY_VALUE_COMPOUND_ANSWER_GRADE_DISTRIBUTE;
-                        // @codingStandardsIgnoreEnd
-                        $wirisquestion .= '</data>';
-
-                        $distribution = $this->wrsqz_get_distribution($originaltext);
-                        // @codingStandardsIgnoreStart
-                        $wirisquestion .= '<data name="' .
-                                com_wiris_quizzes_api_QuizzesConstants::$PROPERTY_COMPOUND_ANSWER_GRADE_DISTRIBUTION . '">';
-                        // @codingStandardsIgnoreEnd
-                        if ($distribution != '') {
-                            $wirisquestion .= $distribution;
-                        }
-                        $wirisquestion .= '</data>';
-                    }
-                    if (isset($wiriseditor['multipleAnswers']) && $wiriseditor['multipleAnswers'] == true) {
-                        // @codingStandardsIgnoreStart
-                        $wirisquestion .= '<data name="' . com_wiris_quizzes_api_QuizzesConstants::$PROPERTY_COMPOUND_ANSWER . '">';
-                        $wirisquestion .= com_wiris_quizzes_api_QuizzesConstants::$PROPERTY_VALUE_COMPOUND_ANSWER_TRUE;
-                        // @codingStandardsIgnoreEnd
-                        $wirisquestion .= '</data>';
-                    } else {
-                        // @codingStandardsIgnoreStart
-                        $wirisquestion .= '<data name="' . com_wiris_quizzes_api_QuizzesConstants::$PROPERTY_COMPOUND_ANSWER . '">';
-                        $wirisquestion .= com_wiris_quizzes_api_QuizzesConstants::$PROPERTY_VALUE_COMPOUND_ANSWER_FALSE;
-                        // @codingStandardsIgnoreEnd
-                        $wirisquestion .= '</data>';
-                    }
-                    if (isset($data['#']['wirisoptions']) && count($data['#']['wirisoptions'][0]['#']) > 0) {
-                        $wirisquestion .= $this->wrsqz_get_cas_for_computations($data);
-                        $wirisquestion .= $this->wrsqz_hidden_initial_cas_value($data);
-                    }
-
-                    $wirisquestion .= '</localData>';
-                } else {
-                    $wirisquestion .= '<localData>';
-                    if (isset($data['#']['wirisoptions']) && count($data['#']['wirisoptions'][0]['#']) > 0) {
-                        $wirisquestion .= $this->wrsqz_get_cas_for_computations($data);
-                        $wirisquestion .= $this->wrsqz_hidden_initial_cas_value($data);
-                    }
-                    // @codingStandardsIgnoreStart
-                    $wirisquestion .= '<data name="' . com_wiris_quizzes_api_QuizzesConstants::$PROPERTY_ANSWER_FIELD_TYPE . '">';
-                    $wirisquestion .= com_wiris_quizzes_api_QuizzesConstants::$ANSWER_FIELD_TYPE_TEXT;
-                    // @codingStandardsIgnoreEnd
-                    $wirisquestion .= '</data>';
-                    $wirisquestion .= '</localData>';
-                }
-            }
-            $wirisquestion .= '</question>';
-            $qo->wirisquestion = $wirisquestion;
-        } else {
-            // Import from Moodle 2.x.
-            $qo = $format->import_shortanswer($data);
-            $qo->qtype = 'hwtestnlab';
-            $qo->wirisquestion = trim($this->decode_html_entities($data['#']['wirisquestion'][0]['#']));
-        }
-        return $qo;
+        $question = parent::import_from_xml($data, $question, $format, null);
+        $format->import_combined_feedback($question, $data, true);
+        $format->import_hints($question, $data, true, false, $format->get_format($question->questiontextformat));
+        return $question;
+    }
+    public function export_to_xml($question, qformat_xml $format, $extra = null) {
+        global $CFG;
+        $pluginmanager = core_plugin_manager::instance();
+        $gapfillinfo = $pluginmanager->get_plugin_info('question_hwtestnlab');
+        $output = parent::export_to_xml($question, $format);
+        //TODO
+        $output .= $format->write_combined_feedback($question->options, $question->id, $question->contextid);
+        return $output;
     }
 
-    private function wrsqz_get_distribution($text) {
-        $distribution = '';
-        $text = trim($text);
-        $answerarray = explode("#", $text);
 
-        foreach ($answerarray as $key => $value) {
-            if (strpos($value, '(')) {
-                $value = trim($value);
-                $compoundarray = explode(" ", $value);
-                $distribution .= $compoundarray[1] . ' ';
-            }
-        }
-        $distribution = str_replace('(', '', $distribution);
-        $distribution = str_replace(')', '', $distribution);
-        return trim($distribution);
+    public function get_random_guess_score($questiondata) {
+        // TODO.
+        return 0;
     }
 
+    public function get_possible_responses($questiondata) {
+        // TODO.
+        return array();
+    }
 }

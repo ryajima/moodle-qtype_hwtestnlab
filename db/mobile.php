@@ -18,7 +18,7 @@
  * hwtestnlab question type  capability definition
  *
  * @package    qtype_hwtestnlab
- * @copyright  20XX Author Name
+ * @copyright  2021 Ryo YAJIMA
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();

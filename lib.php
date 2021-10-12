@@ -14,38 +14,35 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Serve question type files
+ *
+ * @since      2.0
+ * @package    qtype_hwtestnlab
+ * @copyright  2021 Ryo YAJIMA (escaryo21work@gmail.com)
+
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+
 defined('MOODLE_INTERNAL') || die();
 
 
-
-function wrsqz_convert_for_compound($text) {
-    $answerarray = array();
-    $compoundanswertext = '<math xmlns="http://www.w3.org/1998/Math/MathML">';
-
-    $text = trim($text);
-    if (!strpos($text, '(')) {
-        $answerarray = explode(" ", $text);
-        foreach ($answerarray as $key => $value) {
-            if ($key != 0) {
-                $compoundanswertext .= '<mspace linebreak="newline"/>';
-            }
-            $value = trim($value);
-            $compoundanswertext .= '<mi>' . substr($value, 1) . '</mi><mo>=</mo><mi>' . $value . '</mi>';
-        }
-    } else {
-        $answerarray = explode(")", $text);
-        foreach ($answerarray as $key => $value) {
-            if ($value != '') {
-                if ($key != 0) {
-                    $compoundanswertext .= '<mspace linebreak="newline"/>';
-                }
-                $openpar = strpos($value, '(');
-                $value = trim(substr($value, 0, $openpar));
-                $compoundanswertext .= '<mi>' . substr($value, 1) . '</mi><mo>=</mo><mi>' . $value . '</mi>';
-            }
-        }
-    }
-
-    $compoundanswertext .= '</math>';
-    return $compoundanswertext;
+/**
+ * Checks file access for hwtestnlab questions.
+ * @package  qtype_hwtestnlab
+ * @category files
+ * @param stdClass $course course object
+ * @param stdClass $cm course module object
+ * @param stdClass $context context object
+ * @param string $filearea file area
+ * @param array $args extra arguments
+ * @param bool $forcedownload whether or not force download
+ * @param array $options additional options affecting the file serving
+ * @return bool
+ */
+function qtype_hwtestnlab_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+    global $DB, $CFG;
+    require_once($CFG->libdir . '/questionlib.php');
+    question_pluginfile($course, $context, 'qtype_hwtestnlab', $filearea, $args, $forcedownload, $options);
 }

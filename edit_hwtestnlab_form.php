@@ -14,69 +14,47 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Defines the editing form for the hwtestnlab question type.
+ *
+ * @package    qtype
+ * @subpackage hwtestnlab
+ * @copyright  2021 Ryo YAJIMA (escaryo21work@gmail.com)
+
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/question/type/wq/edit_wq_form.php');
-require_once($CFG->dirroot . '/question/type/shortanswer/edit_shortanswer_form.php');
 
-class qtype_hwtestnlab_edit_form extends qtype_wq_edit_form {
+/**
+ * hwtestnlab question editing form definition.
+ *
+ * @copyright  2021 Ryo YAJIMA (escaryo21work@gmail.com)
+
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class qtype_hwtestnlab_edit_form extends question_edit_form {
 
     protected function definition_inner($mform) {
-        global $CFG;
+        //Add fields specific to this question type
+        //remove any that come with the parent class you don't want
+        
+        // To add combined feedback (correct, partial and incorrect).
+        $this->add_combined_feedback_fields(true);
+        // Adds hinting features.
+        $this->add_interactive_settings(true, true);
+    }
 
-        parent::definition_inner($mform);
+    protected function data_preprocessing($question) {
+        $question = parent::data_preprocessing($question);
+        $question = $this->data_preprocessing_hints($question);
 
-        // Hide usecase field.
-        $usecasevalue = $mform->_elementIndex['usecase'];
-        $mform->_elements[$usecasevalue]->_label = '';
-        $mform->_elements[$usecasevalue]->_attributes['style'] = 'display:none';
-        // Change Correct Answers instructions.
-        $mform->getElement('answersinstruct')->setValue(get_string('filloutoneanswer', 'qtype_hwtestnlab'));
-
-        if ($CFG->version >= 2013051400) { // 2.5+.
-            global $PAGE;
-
-            // Change page type because is needed by the css.
-            $PAGE->set_pagetype('question-type-shortanswer');
-
-            foreach ($mform->_elementIndex as $key => $value) {
-                if (substr($key, 0, 14) == 'answeroptions[') {
-                    $elem = $mform->_elements[$value];
-                    foreach ($elem->_elements as $k => $subel) {
-                        if ($subel->_type == 'text') {
-                            // Add class info in order to be recognized by Wiris Quizzes.
-                            $classattributes = 'wirisauthoringfield wirisstudio wirisopenanswer';
-                            $classattributes .= ' ' . 'wirisvariables wirisauxiliarcas wirisgradingfunction';
-                            $classattributes .= ' ' . 'wirisauxiliartextinput wirisgraphicsyntax';
-                            $subel->_attributes['class'] = $classattributes;
-                            $subel->_attributes['wirisslot'] = "0";
-                        }
-                    }
-                }
-            }
-        } else {
-            foreach ($mform->_elementIndex as $key => $value) {
-                if (substr($key, 0, 7) == 'answer[') {
-                    $classattributes = 'wirisauthoringfield wirisstudio wirisopenanswer';
-                    $classattributes .= ' ' . 'wirisvariables wirisauxiliarcas wirisgradingfunction';
-                    $mform->_elements[$value]->_attributes['class'] = $classattributes;
-                }
-            }
-        }
+        return $question;
     }
 
     public function qtype() {
         return 'hwtestnlab';
-    }
-}
-
-class qtype_hwtestnlab_helper_edit_form extends qtype_shortanswer_edit_form {
-    protected function get_more_choices_string() {
-        return get_string('hwtestnlab_addanswers', 'qtype_hwtestnlab');
-    }
-    protected function add_per_answer_fields(&$mform, $label, $gradeoptions,
-                                             $minoptions = QUESTION_NUMANS_START,
-                                             $addoptions = QUESTION_NUMANS_ADD) {
-        return parent::add_per_answer_fields($mform, $label, $gradeoptions, 1, 1);
     }
 }
