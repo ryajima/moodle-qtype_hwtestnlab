@@ -71,7 +71,7 @@ class qtype_hwtestnlab extends question_type {
             $options = new stdClass();
             $options->questionid = $question->id;
             /* add any more non combined feedback fields here */
-            $options->id = $DB->insert_record('question_imageselect', $options);
+            $options->id = $DB->insert_record('question_hwtestnlab', $options);
         }
         $options = $this->save_combined_feedback_helper($options, $question, $question->context, true);
         $DB->update_record('question_hwtestnlab', $options);
