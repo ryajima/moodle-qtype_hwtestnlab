@@ -45,7 +45,8 @@ class qtype_hwtestnlab extends question_type {
 
       /* ties additional table fields to the database */
     public function extra_question_fields() {
-        return array('question_hwtestnlab', 'somefieldname','anotherfieldname');
+        //return array('question_hwtestnlab', 'somefieldname','anotherfieldname');
+        return array('question_hwtestnlab');
     }
     public function move_files($questionid, $oldcontextid, $newcontextid) {
         parent::move_files($questionid, $oldcontextid, $newcontextid);
