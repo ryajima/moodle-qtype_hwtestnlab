@@ -15,8 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Short answer question type version information.
- *
  * @package    qtype
  * @subpackage hwtestnlab
  * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
@@ -25,9 +23,35 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'qtype_hwtestnlab';
-$plugin->version   = 2021051700;
+/**
+ * Short answer question type conversion handler
+ */
+class moodle1_qtype_hwtestnlab_handler extends moodle1_qtype_handler {
 
-$plugin->requires  = 2021051100;
+    /**
+     * @return array
+     */
+    public function get_question_subpaths() {
+        return array(
+            'ANSWERS/ANSWER',
+            'hwtestnlab',
+        );
+    }
 
-$plugin->maturity  = MATURITY_STABLE;
+    /**
+     * Appends the hwtestnlab specific information to the question
+     */
+    public function process_question(array $data, array $raw) {
+
+        // Convert and write the answers first.
+        if (isset($data['answers'])) {
+            $this->write_answers($data['answers'], $this->pluginname);
+        }
+
+        // Convert and write the hwtestnlab extra fields.
+        foreach ($data['hwtestnlab'] as $hwtestnlab) {
+            $hwtestnlab['id'] = $this->converter->get_nextid();
+            $this->write_xml('hwtestnlab', $hwtestnlab, array('/hwtestnlab/id'));
+        }
+    }
+}

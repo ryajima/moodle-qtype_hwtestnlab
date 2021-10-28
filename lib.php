@@ -17,10 +17,9 @@
 /**
  * Serve question type files
  *
- * @since      2.0
+ * @since      Moodle 2.0
  * @package    qtype_hwtestnlab
- * @copyright  2021 Ryo YAJIMA (escaryo21work@gmail.com)
-
+ * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -29,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 
 /**
- * Checks file access for hwtestnlab questions.
+ * Checks file access for short answer questions.
  * @package  qtype_hwtestnlab
  * @category files
  * @param stdClass $course course object

@@ -15,25 +15,40 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Multi-answer question type upgrade code.
+ * Short-answer question type upgrade code.
  *
  * @package    qtype
  * @subpackage hwtestnlab
- * @copyright  2021 Ryo YAJIMA
+ * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Upgrade code for the hwtestnlab question type.
- * A selection of things you might want to do when upgrading
- * to a new version. This file is generally not needed for 
- * the first release of a question type.
+ * Upgrade code for the essay question type.
  * @param int $oldversion the version we are upgrading from.
  */
-function xmldb_qtype_hwtestnlab_upgrade($oldversion = 0) {
-    global $CFG, $DB;
+function xmldb_qtype_hwtestnlab_upgrade($oldversion) {
+    global $CFG;
 
-    $dbman = $DB->get_manager();
+    // Automatically generated Moodle v3.6.0 release upgrade line.
+    // Put any upgrade step following this.
+
+    // Automatically generated Moodle v3.7.0 release upgrade line.
+    // Put any upgrade step following this.
+
+    // Automatically generated Moodle v3.8.0 release upgrade line.
+    // Put any upgrade step following this.
+
+    // Automatically generated Moodle v3.9.0 release upgrade line.
+    // Put any upgrade step following this.
+
+    // Automatically generated Moodle v3.10.0 release upgrade line.
+    // Put any upgrade step following this.
+
+    // Automatically generated Moodle v3.11.0 release upgrade line.
+    // Put any upgrade step following this.
+
     return true;
 }

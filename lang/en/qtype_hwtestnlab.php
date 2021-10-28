@@ -19,13 +19,29 @@
  *
  * @package    qtype
  * @subpackage hwtestnlab
- * @copyright  2021 Ryo YAJIMA (escaryo21work@gmail.com)
-
+ * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$string['pluginname'] = 'hwtestnlab';
-$string['pluginname_help'] = 'Create a hwtestnlab question type with insert question description here.';
+
+$string['addmoreanswerblanks'] = 'Blanks for {no} More Answers';
+$string['answer'] = 'Answer: {$a}';
+$string['answermustbegiven'] = 'You must enter an answer if there is a grade or feedback.';
+$string['answerno'] = 'Answer {$a}';
+$string['caseno'] = 'No, case is unimportant';
+$string['casesensitive'] = 'Case sensitivity';
+$string['caseyes'] = 'Yes, case must match';
+$string['correctansweris'] = 'The correct answer is: {$a}';
+$string['correctanswers'] = 'Correct answers';
+$string['filloutoneanswer'] = 'You must provide at least one possible answer. Answers left blank will not be used. \'*\' can be used as a wildcard to match any characters. The first matching answer will be used to determine the score and feedback.';
+$string['notenoughanswers'] = 'This type of question requires at least {$a} answers';
+$string['pleaseenterananswer'] = 'Please enter an answer.';
+$string['pluginname'] = 'Hand-writing short answer';
+$string['pluginname_help'] = 'In response to a question (that may include an image) the respondent types a word or short phrase. There may be several possible correct answers, each with a different grade. If the "Case sensitive" option is selected, then you can have different scores for "Word" or "word".';
 $string['pluginname_link'] = 'question/type/hwtestnlab';
-$string['pluginnameadding'] = 'Adding a hwtestnlab question';
-$string['pluginnameediting'] = 'Editing a hwtestnlab question';
-$string['pluginnamesummary'] = 'A hwtestnlab question type that allows something to be done that can test a student on some understanding.';
+$string['pluginnameadding'] = 'Adding a Hand-writing short answer question';
+$string['pluginnameediting'] = 'Editing a Hand-writing short answer question';
+$string['pluginnamesummary'] = 'Allows a response of one or a few words that is graded by comparing against various model answers, which may contain wildcards.';
+$string['privacy:metadata'] = 'Hand-writing short answer question type plugin allows question authors to set default options as user preferences.';
+$string['privacy:preference:defaultmark'] = 'The default mark set for a given question.';
+$string['privacy:preference:penalty'] = 'The penalty for each incorrect try when questions are run using the \'Interactive with multiple tries\' or \'Adaptive mode\' behaviour.';
+$string['privacy:preference:usecase'] = 'Whether the answers should be case sensitive.';
