@@ -15,16 +15,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Question type class for the hwtestnlab question type.
+ * Question type class for the short answer question type.
  *
  * @package    qtype
  * @subpackage hwtestnlab
- * @copyright  2021 TUAT_Nakagawa_Lab.,NIER (escaryo21work@gmail.com)
-
+ * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
- /*https://docs.moodle.org/dev/Question_types#Question_type_and_question_definition_classes*/
 
 
 defined('MOODLE_INTERNAL') || die();
@@ -35,100 +32,96 @@ require_once($CFG->dirroot . '/question/type/hwtestnlab/question.php');
 
 
 /**
- * The hwtestnlab question type.
+ * The short answer question type.
  *
- * @copyright  2021 TUAT_Nakagawa_Lab.,NIER (escaryo21work@gmail.com)
-
+ * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qtype_hwtestnlab extends question_type {
-
-      /* ties additional table fields to the database */
     public function extra_question_fields() {
-        return array('question_hwtestnlab', 'somefieldname','anotherfieldname');
+        return array('qtype_hwtestnlab_options', 'usecase');
     }
+
     public function move_files($questionid, $oldcontextid, $newcontextid) {
         parent::move_files($questionid, $oldcontextid, $newcontextid);
+        $this->move_files_in_answers($questionid, $oldcontextid, $newcontextid);
         $this->move_files_in_hints($questionid, $oldcontextid, $newcontextid);
     }
 
     protected function delete_files($questionid, $contextid) {
         parent::delete_files($questionid, $contextid);
+        $this->delete_files_in_answers($questionid, $contextid);
         $this->delete_files_in_hints($questionid, $contextid);
     }
-     /**
-     * @param stdClass $question
-     * @param array $form
-     * @return object
-     */
-    public function save_question($question, $form) {
-        return parent::save_question($question, $form);
+
+    public function save_defaults_for_new_questions(stdClass $fromform): void {
+        parent::save_defaults_for_new_questions($fromform);
+        $this->set_default_value('usecase', $fromform->usecase);
     }
+
     public function save_question_options($question) {
         global $DB;
-        $options = $DB->get_record('question_hwtestnlab', array('questionid' => $question->id));
-        if (!$options) {
-            $options = new stdClass();
-            $options->questionid = $question->id;
-            /* add any more non combined feedback fields here */
-            
-            $options->id = $DB->insert_record('question_hwtestnlab', $options);
-            
+        $result = new stdClass();
+
+        // Perform sanity checks on fractional grades.
+        $maxfraction = -1;
+        foreach ($question->answer as $key => $answerdata) {
+            if ($question->fraction[$key] > $maxfraction) {
+                $maxfraction = $question->fraction[$key];
+            }
         }
-        $options = $this->save_combined_feedback_helper($options, $question, $question->context, true);
-        $DB->update_record('question_hwtestnlab', $options);
+
+        if ($maxfraction != 1) {
+            $result->error = get_string('fractionsnomax', 'question', $maxfraction * 100);
+            return $result;
+        }
+
+        parent::save_question_options($question);
+
+        $this->save_question_answers($question);
+
         $this->save_hints($question);
     }
 
- /* 
- * populates fields such as combined feedback 
- * also make $DB calls to get data from other tables
- */
-   public function get_question_options($question) {
-     //TODO
-       parent::get_question_options($question);
+    protected function fill_answer_fields($answer, $questiondata, $key, $context) {
+        $answer = parent::fill_answer_fields($answer, $questiondata, $key, $context);
+        $answer->answer = trim($answer->answer);
+        return $answer;
     }
 
- /**
- * executed at runtime (e.g. in a quiz or preview 
- **/
     protected function initialise_question_instance(question_definition $question, $questiondata) {
         parent::initialise_question_instance($question, $questiondata);
         $this->initialise_question_answers($question, $questiondata);
-        parent::initialise_combined_feedback($question, $questiondata);
     }
-    
-   public function initialise_question_answers(question_definition $question, $questiondata,$forceplaintextanswers = true){ 
-     //TODO
-    }
-    
-    public function import_from_xml($data, $question, qformat_xml $format, $extra = null) {
-        if (!isset($data['@']['type']) || $data['@']['type'] != 'question_hwtestnlab') {
-            return false;
-        }
-        $question = parent::import_from_xml($data, $question, $format, null);
-        $format->import_combined_feedback($question, $data, true);
-        $format->import_hints($question, $data, true, false, $format->get_format($question->questiontextformat));
-        return $question;
-    }
-    public function export_to_xml($question, qformat_xml $format, $extra = null) {
-        global $CFG;
-        $pluginmanager = core_plugin_manager::instance();
-        $gapfillinfo = $pluginmanager->get_plugin_info('question_hwtestnlab');
-        $output = parent::export_to_xml($question, $format);
-        //TODO
-        $output .= $format->write_combined_feedback($question->options, $question->id, $question->contextid);
-        return $output;
-    }
-
 
     public function get_random_guess_score($questiondata) {
-        // TODO.
+        foreach ($questiondata->options->answers as $aid => $answer) {
+            if ('*' == trim($answer->answer)) {
+                return $answer->fraction;
+            }
+        }
         return 0;
     }
 
     public function get_possible_responses($questiondata) {
-        // TODO.
-        return array();
+        $responses = array();
+
+        $starfound = false;
+        foreach ($questiondata->options->answers as $aid => $answer) {
+            $responses[$aid] = new question_possible_response($answer->answer,
+                    $answer->fraction);
+            if ($answer->answer === '*') {
+                $starfound = true;
+            }
+        }
+
+        if (!$starfound) {
+            $responses[0] = new question_possible_response(
+                    get_string('didnotmatchanyanswer', 'question'), 0);
+        }
+
+        $responses[null] = question_possible_response::no_response();
+
+        return array($questiondata->id => $responses);
     }
 }

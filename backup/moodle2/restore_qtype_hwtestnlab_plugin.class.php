@@ -15,41 +15,29 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Mobile output class for qtype_hwtestnlab
- *
- * @package    qtype_hwtestnlab
- * @copyright  2018 YOUR NAME
+ * @package    moodlecore
+ * @subpackage backup-moodle2
+ * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace qtype_hwtestnlab\output;
 
 defined('MOODLE_INTERNAL') || die();
 
+global $CFG;
+require_once($CFG->dirroot . '/backup/moodle2/restore_qtype_extrafields_plugin.class.php');
+
 /**
- * Mobile output class for hwtestnlab question type
+ * Restore plugin class that provides the necessary information
+ * needed to restore one hwtestnlab qtype plugin
  *
- * @package    qtype_hwtestnlab
- * @copyright  20XX YOUR NAME
+ * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mobile {
-
+class restore_qtype_hwtestnlab_plugin extends restore_qtype_extrafields_plugin {
     /**
-     * Returns the hwtestnlab question type for the quiz the mobile app.
-     *
-     * @return void
+     * Process the qtype/hwtestnlab element
      */
-    public static function mobile_get_hwtestnlab() {
-        global $CFG;
-        return [
-            'templates' => [
-                [
-                    'id' => 'main',
-                    'html' => file_get_contents($CFG->dirroot .'/question/type/hwtestnlab/mobile/qtype-hwtestnlab.html')
-                    ]
-            ],
-            'javascript' => file_get_contents($CFG->dirroot . '/question/type/hwtestnlab/mobile/mobile.js')
-        ];
+    public function process_hwtestnlab($data) {
+        $this->really_process_extra_question_fields($data);
     }
 }

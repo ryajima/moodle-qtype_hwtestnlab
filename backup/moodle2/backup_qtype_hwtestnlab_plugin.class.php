@@ -13,11 +13,21 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Contains the helper class for the select missing words question type tests.
- *
- * @package    qtype
- * @copyright  Year TUAT_Nakagawa_Lab.,NIER
+ * @package    moodlecore
+ * @subpackage backup-moodle2
+ * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Provides the information to backup hwtestnlab questions
+ *
+ * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class backup_qtype_hwtestnlab_plugin extends backup_qtype_extrafields_plugin {
+}
