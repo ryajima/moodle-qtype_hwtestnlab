@@ -48,14 +48,14 @@
     // });
 
     
-    canvas.width  = 800;
-    canvas.height = 400;
+    canvas.width  = 600;
+    canvas.height = 200;
 
     // キャンバスの背景カラーを決定
     var ctx = canvas.getContext('2d');
     ctx.beginPath();
     ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, 800, 400);
+    ctx.fillRect(0, 0, 600, 200);
  
     // ペンの色・太さ
     var defosize = 1;
