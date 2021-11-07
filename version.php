@@ -26,8 +26,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qtype_hwtestnlab';
-$plugin->version   = 2021051700;
+$plugin->version   = 2021110800;
 
-$plugin->requires  = 2021051100;
+$plugin->requires  = 2021051700;
 
 $plugin->maturity  = MATURITY_STABLE;
