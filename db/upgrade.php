@@ -50,5 +50,31 @@ function xmldb_qtype_hwtestnlab_upgrade($oldversion) {
     // Automatically generated Moodle v3.11.0 release upgrade line.
     // Put any upgrade step following this.
 
-    return true;
+    $result = TRUE;
+
+    if ($oldversion < 2021110800) {
+
+        // Define table qtype_hwtestnlab_options to be created.
+        $table = new xmldb_table('qtype_hwtestnlab_options');
+
+        // Adding fields to table qtype_hwtestnlab_options.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('questionid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('usecase', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0');
+
+        // Adding keys to table qtype_hwtestnlab_options.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('questionid', XMLDB_KEY_FOREIGN_UNIQUE, ['questionid'], 'question', ['id']);
+
+        // Conditionally launch create table for qtype_hwtestnlab_options.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Hwtestnlab savepoint reached.
+        upgrade_plugin_savepoint(true, 2021110800, 'qtype', 'hwtestnlab');
+    }
+
+
+    return $result;
 }
