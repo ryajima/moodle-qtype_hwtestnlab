@@ -76,8 +76,8 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
 
 
         // hand-writing answer box
-        $input .= html_writer::empty_tag('br') . $feedbackimg;
-        $input .= html_writer::start_tag('div', $questiontext, array('class' => 'my-2'));
+        $input .= html_writer::empty_tag('br');
+        $input .= html_writer::start_tag('div', array('class' => 'my-2'));
         $input .= html_writer::tag('button', 'Clear', array('id' => 'clrBtn'));
         $input .= html_writer::tag('button', 'Undo', array('id' => 'undoBtn'));
         $input .= html_writer::tag('button', 'Answer', array('id' => 'sendBtn'));
