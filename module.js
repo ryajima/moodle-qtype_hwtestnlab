@@ -76,14 +76,16 @@
     var strokes = [];
 
     // 問題番号
-    var qname = getParam("qid");    
-    // 正答（暫定）
-    var results = '';
+    //var qname = getParam("qid");    
+    // 正答
+    //var results = '';
 
     // ホストアドレス（学外）
     //var hostUrl = 'https://d6y4bagh89.execute-api.ap-northeast-1.amazonaws.com/default/save-json-to-s3';
-    // ホストアドレス（学内）
-    var hostUrl = 'https://rbk0uge9ra.execute-api.ap-northeast-1.amazonaws.com/default/save-json-to-s3-nlab';
+    // database ホスト（学内）
+    //var hostUrl = 'https://rbk0uge9ra.execute-api.ap-northeast-1.amazonaws.com/default/save-json-to-s3-nlab';
+    // recognision-server ホスト（学内）
+    //var RecogUrl = ''
 
     // 時間計測用
     var startTime;
