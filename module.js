@@ -49,8 +49,8 @@
     // });
 
     
-    canvas.width  = 150;
-    canvas.height = 50;
+    canvas.width  = 800;
+    canvas.height = 400;
 
     // キャンバスの背景カラーを決定
     var ctx = canvas.getContext('2d');
@@ -298,30 +298,10 @@
         alert('debug: answerボタンが押されました')
     }
 
-    // 消去ボタン押下
+    // Clearボタン押下
     function clearCanvas(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         strokes=[];
-    }
-
-    // 進むボタン押下
-    function nextBtnClk() {
-        if (strokes.length > 0) alert("回答ボタンを押してください");
-        else {
-            strokes=[];
-            nextpage();
-        }
-    }
-
-    // 戻るボタン押下
-    function prevBtnClk() {
-        if (strokes.length > 0) {
-            var result = confirm("戻ると回答は消去されます");
-            if (!result) return;
-            else clearCanvas();
-        }
-        storokes=[];
-        prevpage();
     }
 
     // Undoボタン押下
