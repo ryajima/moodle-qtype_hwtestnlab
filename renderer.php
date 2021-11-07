@@ -89,6 +89,8 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
         $input .= html_writer::tag('button', 'Answer', array('id' => 'sendBtn'));
         $input .= html_writer::end_tag('div');
 
+        $this->page->requires->js( new moodle_url($CFG->wwwroot . '/question/type/hwtestnlab/module.js'));
+
 
 
         if ($placeholder) {
