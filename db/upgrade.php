@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
  * @param int $oldversion the version we are upgrading from.
  */
 function xmldb_qtype_hwtestnlab_upgrade($oldversion) {
-    global $CFG;
+    global $CFG, $DB;
 
     // Automatically generated Moodle v3.6.0 release upgrade line.
     // Put any upgrade step following this.
@@ -67,6 +67,7 @@ function xmldb_qtype_hwtestnlab_upgrade($oldversion) {
         $table->add_key('questionid', XMLDB_KEY_FOREIGN_UNIQUE, ['questionid'], 'question', ['id']);
 
         // Conditionally launch create table for qtype_hwtestnlab_options.
+        $dbman = $DB->get_manager();
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
