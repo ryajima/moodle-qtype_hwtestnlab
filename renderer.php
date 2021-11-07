@@ -74,6 +74,17 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
         }
         $input = html_writer::empty_tag('input', $inputattributes) . $feedbackimg;
 
+
+        // hand-writing answer box
+        $input .= html_writer::empty_tag('br') . $feedbackimg;
+        $input .= html_writer::start_tag('div', $questiontext, array('class' => 'my-2'));
+        $input .= html_writer::tag('button', 'Clear', array('id' => 'clrBtn'));
+        $input .= html_writer::tag('button', 'Undo', array('id' => 'undoBtn'));
+        $input .= html_writer::tag('button', 'Answer', array('id' => 'sendBtn'));
+        $input .= html_writer::end_tag('div');
+
+
+
         if ($placeholder) {
             $inputinplace = html_writer::tag('label', get_string('answer'),
                     array('for' => $inputattributes['id'], 'class' => 'accesshide'));
@@ -81,6 +92,7 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
             $questiontext = substr_replace($questiontext, $inputinplace,
                     strpos($questiontext, $placeholder), strlen($placeholder));
         }
+
 
         $result = html_writer::tag('div', $questiontext, array('class' => 'qtext'));
 
