@@ -37,17 +37,21 @@
     //     canvas.width = 700 * screen.width / 860;
     //     canvas.height = 400 * screen.width / 860;
     // }
-    var header_h = $('.header').outerHeight();
-    var btns_h   = $('#btns').outerHeight();
-    var footer_h = $('.footer').outerHeight();
-    qimg.height   = (window.innerHeight - header_h - btns_h - footer_h - 40)/2;
-    canvas.height = (window.innerHeight - header_h - btns_h - footer_h - 40)/2;
+    // var header_h = $('.header').outerHeight();
+    // var btns_h   = $('#btns').outerHeight();
+    // var footer_h = $('.footer').outerHeight();
+    // qimg.height   = (window.innerHeight - header_h - btns_h - footer_h - 40)/2;
+    // canvas.height = (window.innerHeight - header_h - btns_h - footer_h - 40)/2;
     
-    $('#question').bind('load', function(){
-        canvas.width  = qimg.width;
-        canvas.height = qimg.height;
-    });
- 
+    // $('#question').bind('load', function(){
+    //     canvas.width  = qimg.width;
+    //     canvas.height = qimg.height;
+    // });
+
+    
+    canvas.width  = 150;
+    canvas.height = 50;
+
     // キャンバスの背景カラーを決定
     var ctx = canvas.getContext('2d');
     ctx.beginPath();
