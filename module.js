@@ -28,9 +28,8 @@
     var canvas = document.getElementById('myCanvas');
     var sendBtn  = document.getElementById('sendBtn');
     var clrBtn  = document.getElementById('clrBtn');
-    var qimg = document.getElementById('question');
-    var nextBtn = document.getElementById('nextBtn');
-    var prevBtn = document.getElementById('prevBtn');
+    var undoBtn  = document.getElementById('undoBtn');
+
 
     // レスポンシブサイズ
     // if (screen.width < 860) {
@@ -104,11 +103,6 @@
     sendBtn.addEventListener('click', sendJson, false);
     // 消去ボタン
     clrBtn.addEventListener('click', clearCanvas, false);
-
-    // 進む戻るボタン
-    nextBtn.addEventListener('click', nextBtnClk, false);
-    prevBtn.addEventListener('click', prevBtnClk, false);
-
     // Undoボタン
     undoBtn.addEventListener('click', undoBtnClk, false);
     
