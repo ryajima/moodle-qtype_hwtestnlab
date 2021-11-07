@@ -36,6 +36,8 @@ defined('MOODLE_INTERNAL') || die();
 class qtype_hwtestnlab_renderer extends qtype_renderer {
     public function formulation_and_controls(question_attempt $qa,
             question_display_options $options) {
+        
+        global $CFG;
 
         $question = $qa->get_question();
         $currentanswer = $qa->get_last_qt_var('answer');
