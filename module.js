@@ -48,14 +48,14 @@
     // });
 
     
-    canvas.width  = 800;
-    canvas.height = 400;
+    canvas.width  = 400;
+    canvas.height = 100;
 
     // キャンバスの背景カラーを決定
     var ctx = canvas.getContext('2d');
     ctx.beginPath();
     ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, 800, 400);
+    ctx.fillRect(0, 0, 400, 100);
  
     // ペンの色・太さ
     var defosize = 1;
@@ -84,7 +84,7 @@
     // database ホスト（学内）
     //var hostUrl = 'https://rbk0uge9ra.execute-api.ap-northeast-1.amazonaws.com/default/save-json-to-s3-nlab';
     // recognision-server ホスト（学内）
-    //var RecogUrl = ''
+    //var RecogUrl = 'http://ubuntu-z820:3000/api/v1/recognize'
 
     // 時間計測用
     var startTime;
