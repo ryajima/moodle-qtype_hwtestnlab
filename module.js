@@ -69,6 +69,7 @@
     // ストローク座標のリスト
     var XList = [];
     var YList = [];
+    var PList = [];
     // ストロークフラグ
     var isStroke = false;
     // ストロークのオブジェクト
@@ -189,6 +190,7 @@
         // 描画点の座標をリストに挿入
         XList.push(X);
         YList.push(Y);
+        PList.push([X, Y]);
 
         //マウス継続値に現在のマウス位置、つまりゴール位置を代入
         mouseX = X;
@@ -213,14 +215,14 @@
                              delete: 'No'});
             
             
-            let p = [];
-            for(let i in XList.length){
-                p.push([XList[i], YList[i]]);
-            }
-            points.push(p);
+            // let p = [];
+            // for(let i in XList.length){
+            //     p.push([XList[i], YList[i]]);
+            // }
+            points.push(PList);
             // debug用　json表示
             console.log(JSON.stringify(points,undefined,1));
-            alert(points);
+            //alert(points);
 
             isStroke = false;
         }
@@ -228,6 +230,7 @@
         // ストローク座標リストの初期化
         XList = [];
         YList = [];
+        PList = [];
 
         //スクロール復帰
         document.removeEventListener('touchmove', handleTouchMove, { passive: false });
