@@ -314,7 +314,7 @@
             }).then(function(response){
                 if (response.ok) {
                     console.log(response.url); //レスポンスのURL
-                    alert(response.status); //レスポンスのHTTPステータスコード
+                    alert('status code', response.status); //レスポンスのHTTPステータスコード
                     console.log(response.json());
                     //alert('解答を認識しました');
                     strokes=[];
