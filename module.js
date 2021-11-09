@@ -222,7 +222,6 @@
             points.push(PList);
             // debug用　json表示
             console.log(JSON.stringify(points,undefined,1));
-            //alert(points);
 
             isStroke = false;
         }
@@ -328,9 +327,9 @@
         }
     }
     
-    function sendJson(){
-        alert('debug: answerボタンが押されました')
-    }
+    // function sendJson(){
+    //     alert('debug: answerボタンが押されました')
+    // }
 
     // Clearボタン押下
     function clearCanvas(){
