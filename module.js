@@ -220,6 +220,7 @@
             points.push(p);
             // debug用　json表示
             console.log(JSON.stringify(points,undefined,1));
+            alert(points);
 
             isStroke = false;
         }
