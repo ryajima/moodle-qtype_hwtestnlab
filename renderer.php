@@ -74,12 +74,12 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
             $placeholder = $matches[0];
             $inputattributes['size'] = round(strlen($placeholder) * 1.1);
         }
-        $input = html_writer::empty_tag('input', $inputattributes) . $feedbackimg;
+        //$input = html_writer::empty_tag('input', $inputattributes) . $feedbackimg;
 
 
         // hand-writing answer box
-        $input .= html_writer::empty_tag('br');
-        $input .= html_writer::start_tag('div', array('class' => 'qanda'));
+        //$input = html_writer::empty_tag('br');
+        $input = html_writer::start_tag('div', array('class' => 'qanda'));
         $input .= html_writer::start_tag('canvas', array('id' => 'myCanvas' ,'class' => 'qanda'));
         $input .= html_writer::end_tag('canvas');
         $input .= html_writer::end_tag('div');
