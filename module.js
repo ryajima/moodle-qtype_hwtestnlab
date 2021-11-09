@@ -88,7 +88,7 @@
     // database ホスト（学内）
     //var hostUrl = 'https://rbk0uge9ra.execute-api.ap-northeast-1.amazonaws.com/default/save-json-to-s3-nlab';
     // recognision-server ホスト（学内）
-    //var RecogUrl = 'http://ubuntu-z820:3000/api/v1/recognize'
+    var recogUrl = 'http://ubuntu-z820:3000/api/v1/recognize'
 
     // 時間計測用
     var startTime;
@@ -298,6 +298,32 @@
     //         alert('回答を記入してください');
     //     }
     // }
+    // 送信 -> 認識サーバ
+    function sendJson(){
+        if(strokes.length > 0){
+            //var userid = sessionStorage.getItem('userid');
+            //var userid = 'testuser';
+            fetch(recogUrl, {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'no-store',
+                headers: {"Accept": "application/json","Content-Type": "application/json"},
+                body: JSON.stringify({'typeData': 'online', 'language': language, 'points': points})
+            }).then(function(response){
+                if (response.ok) {
+                    console.log(response.url); //レスポンスのURL
+                    console.log(response.status); //レスポンスのHTTPステータスコード
+                    alert(response.text())
+                    alert('解答を認識しました');
+                    strokes=[];
+                }
+            })
+            .catch(error => console.log('error', error));
+
+        } else {
+            alert('回答を記入してください');
+        }
+    }
     
     function sendJson(){
         alert('debug: answerボタンが押されました')
