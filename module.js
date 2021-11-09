@@ -73,6 +73,10 @@
     var isStroke = false;
     // ストロークのオブジェクト
     var strokes = [];
+    var points = [];
+
+    // 認識モデル
+    var language = 'english';
 
     // 問題番号
     //var qname = getParam("qid");    
@@ -208,8 +212,14 @@
                              duration: endTime-startTime,
                              delete: 'No'});
             
+            
+            let p = [];
+            for(let i in XList.length){
+                p.push([XList[i], YList[i]]);
+            }
+            points.push(p);
             // debug用　json表示
-            //console.log(JSON.stringify(strokes,undefined,1));
+            console.log(JSON.stringify(points,undefined,1));
 
             isStroke = false;
         }
@@ -296,12 +306,14 @@
     function clearCanvas(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         strokes=[];
+        points=[];
     }
 
     // Undoボタン押下
     function undoBtnClk() {
         // 直前のストロークを削除
         strokes.pop();
+        points.pop();
         //strokes.
         // 再描画
         reflesh();
