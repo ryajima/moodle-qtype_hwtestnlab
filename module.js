@@ -317,7 +317,7 @@
                 //console.log(response.url); //レスポンスのURL
                 //alert(response.status); //レスポンスのHTTPステータスコード
                 console.log(responsejson);
-                //alert('解答を認識しました');
+                alert(responsejson);
                 strokes=[];
             })
             .catch(() => alert('recog-server request error'));
