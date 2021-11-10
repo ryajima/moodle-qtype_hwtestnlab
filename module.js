@@ -317,8 +317,8 @@
             .then((responsejson) => {
                 //console.log(response.url); //レスポンスのURL
                 //alert(response.status); //レスポンスのHTTPステータスコード
-                console.log(responsejson.data.result);
-                alert(responsejson.data.result);
+                console.log(responsejson.data);
+                alert(responsejson.data);
                 strokes=[];
 
                 // 認識結果表示
