@@ -311,16 +311,16 @@
                 cache: 'no-store',
                 headers: {"Accept": "application/json","Content-Type": "application/json"},
                 body: JSON.stringify({'typeData': 'online', 'language': language, 'points': points})
-            }).then(function(response){
-                if (response.ok) {
-                    console.log(response.url); //レスポンスのURL
-                    alert(response.status); //レスポンスのHTTPステータスコード
-                    console.log(response.json());
-                    //alert('解答を認識しました');
-                    strokes=[];
-                }
             })
-            .catch(error => console.log('error', error));
+            .then((response) => response.json())
+            .then((responsejson) => {
+                //console.log(response.url); //レスポンスのURL
+                //alert(response.status); //レスポンスのHTTPステータスコード
+                console.log(responsejson);
+                //alert('解答を認識しました');
+                strokes=[];
+            })
+            .catch(() => alert('recog-server request error'));
 
         } else {
             alert('回答を記入してください');
