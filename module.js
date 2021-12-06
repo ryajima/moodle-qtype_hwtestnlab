@@ -47,15 +47,17 @@
     //     canvas.height = qimg.height;
     // });
 
-    
+    // スタイル
     canvas.width  = 400;
     canvas.height = 100;
+    canvas.style.border = "1px solid"; 
+    canvas.style.background = "#fffefc";
 
     // キャンバスの背景カラーを決定
     var ctx = canvas.getContext('2d');
     ctx.beginPath();
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, 400, 100);
+    //ctx.fillStyle = "#ffffff";
+    //ctx.fillRect(0, 0, 400, 100);
  
     // ペンの色・太さ
     var defosize = 1;
@@ -77,7 +79,8 @@
     var points = [];
 
     // 認識モデル
-    var language = 'english';
+    var modelType = 'english';
+    //var modelType = 'math';
 
     // 問題番号
     //var qname = getParam("qid");    
@@ -221,7 +224,7 @@
             // }
             points.push(PList);
             // debug用　json表示
-            console.log(JSON.stringify(points,undefined,1));
+            console.log(JSON.stringify(points));
 
             isStroke = false;
         }
@@ -305,27 +308,37 @@
         if(strokes.length > 0){
             //var userid = sessionStorage.getItem('userid');
             //var userid = 'testuser';
-            let points = [[[8096,4683],[8096,4604],[8070,4577],[8070,4551],[8043,4524],[8017,4498],[7964,4471],[7938,4471],[7858,4471],[7805,4471],[7726,4471],[7646,4471],[7567,4498],[7488,4524],[7329,4630],[7223,4736],[7064,4842],[6985,4948],[6906,5001],[6879,5106],[6826,5186],[6800,5212],[6800,5318],[6800,5398],[6800,5530],[6906,5662],[7064,5847],[7223,6059],[7382,6218],[7514,6350],[7673,6456],[7752,6509],[7858,6562],[7911,6588],[7964,6588],[7990,6588],[8070,6588],[8123,6562],[8176,6429],[8229,6244],[8281,6112],[8334,5953],[8334,5847],[8414,5689],[8414,5636],[8440,5530],[8440,5477],[8467,5424],[8467,5398],[8467,5450],[8573,5609],[8678,5794],[8811,6006],[8864,6165],[9022,6350],[9075,6456],[9181,6615],[9234,6668],[9287,6747],[9313,6773],[9313,6720],[9340,6694],[9340,6641],[9366,6588],[9366,6535]],[[9472,4657],[9472,4657],[9472,4683],[9631,4736],[9869,4763],[10001,4763],[10213,4763],[10398,4763],[10610,4763],[10795,4763],[10874,4763],[11007,4763],[11033,4736]],[[10213,3704],[10213,3704],[10213,3810],[10213,3916],[10186,4101],[10186,4233],[10186,4498],[10186,4657],[10186,4921],[10186,5186],[10213,5477],[10266,5741],[10372,5980],[10451,6218],[10530,6350],[10663,6456],[10769,6588],[10874,6694],[10901,6720],[10927,6773],[10954,6800]]];
-            fetch(recogUrl, {
+            //var points = "[[[8096,4683],[8096,4604],[8070,4577],[8070,4551],[8043,4524],[8017,4498],[7964,4471],[7938,4471],[7858,4471],[7805,4471],[7726,4471],[7646,4471],[7567,4498],[7488,4524],[7329,4630],[7223,4736],[7064,4842],[6985,4948],[6906,5001],[6879,5106],[6826,5186],[6800,5212],[6800,5318],[6800,5398],[6800,5530],[6906,5662],[7064,5847],[7223,6059],[7382,6218],[7514,6350],[7673,6456],[7752,6509],[7858,6562],[7911,6588],[7964,6588],[7990,6588],[8070,6588],[8123,6562],[8176,6429],[8229,6244],[8281,6112],[8334,5953],[8334,5847],[8414,5689],[8414,5636],[8440,5530],[8440,5477],[8467,5424],[8467,5398],[8467,5450],[8573,5609],[8678,5794],[8811,6006],[8864,6165],[9022,6350],[9075,6456],[9181,6615],[9234,6668],[9287,6747],[9313,6773],[9313,6720],[9340,6694],[9340,6641],[9366,6588],[9366,6535]],[[9472,4657],[9472,4657],[9472,4683],[9631,4736],[9869,4763],[10001,4763],[10213,4763],[10398,4763],[10610,4763],[10795,4763],[10874,4763],[11007,4763],[11033,4736]],[[10213,3704],[10213,3704],[10213,3810],[10213,3916],[10186,4101],[10186,4233],[10186,4498],[10186,4657],[10186,4921],[10186,5186],[10213,5477],[10266,5741],[10372,5980],[10451,6218],[10530,6350],[10663,6456],[10769,6588],[10874,6694],[10901,6720],[10927,6773],[10954,6800]]]";
+            var formdata = new FormData();
+            formdata.append("typeData", "online");
+            formdata.append("language", modelType);
+            formdata.append("points", JSON.stringify(points));
+            var requestOptions = {
                 method: 'POST',
-                mode: 'cors',
+                //mode: 'cors',
                 cache: 'no-store',
-                headers: {"Accept": "application/json","Content-Type": "application/json"},
-                body: JSON.stringify({'typeData': 'online', 'language': language, 'points': points})
-            })
+                redirect: 'follow',
+                //headers: {"Accept": "application/json","Content-Type": "application/json"},
+                body: formdata
+            };
+            fetch(recogUrl, requestOptions)
             .then((response) => response.json())
             .then((responsejson) => {
                 //console.log(response.url); //レスポンスのURL
                 //alert(response.status); //レスポンスのHTTPステータスコード
-                console.log(responsejson.data);
-                alert(responsejson.data);
-                strokes=[];
-
+                console.log(JSON.stringify(responsejson));
+                
                 // 認識結果表示
-                let result;
+                let resultText = responsejson.data.result.pattern;
                 ctx.font = "36px serif";
+                ctx.textBaseline = "middle";
+                ctx.textAlign = "center";
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillText(result, canvas.width/2, canvas.height/2)
+                ctx.fillText(resultText, canvas.width/2, canvas.height/2)
+
+                // ストローク消去
+                strokes=[];
+                
 
             })
             .catch(() => alert('recognition server: request error'));
@@ -351,7 +364,6 @@
         // 直前のストロークを削除
         strokes.pop();
         points.pop();
-        //strokes.
         // 再描画
         reflesh();
         // debug用　json表示

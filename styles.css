@@ -7,15 +7,12 @@
     width: 80%;
 }
 
-/* Hand-writin answer box */
+/* Handwriting answerbox */
 #myCanvas {
-    background: #eee;
     margin-top: 0;
     margin-bottom: 0;
     padding-bottom: 5px;
     padding-top: 5px;
-    border: 1px solid #bbb;
-    border-bottom: 0;
 }
 
 

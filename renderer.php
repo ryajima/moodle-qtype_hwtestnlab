@@ -86,9 +86,9 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
         // action buttons of action for strokes
         $input .= html_writer::empty_tag('br');
         $input .= html_writer::start_tag('div', array('class' => 'my-2'));
-        $input .= html_writer::tag('button', 'Clear', array('id' => 'clrBtn', 'class' => 'btn btn-primary'));
-        $input .= html_writer::tag('button', 'Undo', array('id' => 'undoBtn', 'class' => 'btn btn-secondary'));
-        $input .= html_writer::tag('button', 'Answer', array('id' => 'sendBtn', 'class' => 'btn btn-danger'));
+        $input .= html_writer::tag('button', 'Clear', array('id' => 'clrBtn', 'type' => 'button', 'class' => 'btn btn-primary'));
+        $input .= html_writer::tag('button', 'Undo', array('id' => 'undoBtn', 'type' => 'button', 'class' => 'btn btn-secondary'));
+        $input .= html_writer::tag('button', 'Commit', array('id' => 'sendBtn', 'type' => 'button', 'class' => 'btn btn-danger'));
         $input .= html_writer::end_tag('div');
 
         $this->page->requires->js( new moodle_url($CFG->wwwroot . '/question/type/hwtestnlab/module.js'));
