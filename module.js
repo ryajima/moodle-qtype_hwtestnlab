@@ -25,10 +25,11 @@
 
 (function() {
     var qid = document.getElementById('qid');
-    var canvas = document.getElementById('myCanvas');
-    var sendBtn  = document.getElementById('sendBtn');
+    var canvas  = document.getElementById('myCanvas');
+    var sendBtn = document.getElementById('sendBtn');
     var clrBtn  = document.getElementById('clrBtn');
-    var undoBtn  = document.getElementById('undoBtn');
+    var undoBtn = document.getElementById('undoBtn');
+    var ptnDisp = document.getElementById('ptnDisp');
 
 
     // レスポンシブサイズ
@@ -79,8 +80,8 @@
     var points = [];
 
     // 認識モデル
-    var modelType = 'english';
-    //var modelType = 'math';
+    //var modelType = 'english';
+    var modelType = "math";
 
     // 問題番号
     //var qname = getParam("qid");    
@@ -92,7 +93,8 @@
     // database ホスト（学内）
     //var hostUrl = 'https://rbk0uge9ra.execute-api.ap-northeast-1.amazonaws.com/default/save-json-to-s3-nlab';
     // recognision-server ホスト（学内）
-    var recogUrl = 'http://ubuntu-z820:3000/api/v1/recognize'
+    // var recogUrl = 'http://ubuntu-z820:3000/api/v1/recognize'
+    var recogUrl = 'http://192.168.20.65:3000/api/v1/recognize'
 
     // 時間計測用
     var startTime;
@@ -315,7 +317,7 @@
             formdata.append("points", JSON.stringify(points));
             var requestOptions = {
                 method: 'POST',
-                //mode: 'cors',
+                mode: 'cors',
                 cache: 'no-store',
                 redirect: 'follow',
                 //headers: {"Accept": "application/json","Content-Type": "application/json"},
@@ -330,18 +332,34 @@
                 
                 // 認識結果表示
                 let resultText = responsejson.data.result.pattern;
-                ctx.font = "36px serif";
-                ctx.textBaseline = "middle";
-                ctx.textAlign = "center";
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillText(resultText, canvas.width/2, canvas.height/2)
-
+                if(modelType == "math"){
+                    ctx.font = "36px serif";
+                    ctx.textBaseline = "middle";
+                    ctx.textAlign = "center";
+                    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    //ctx.fillText(resultText, canvas.width/2, canvas.height/2)
+                    // var str = "<math>";
+                    // str += "<mi>i</mi>";
+                    // str += "</math>";
+                    ptnDisp.innerHTML =  "$$" + resultText +"$$";
+                    MathJax.Hub.Typeset(ptnDisp);
+                    // var math = MathJax.Hub.getAllJax("ptnDisp")[0];
+                    // MathJax.Hub.Queue(["Text",math,"\\displaystyle{a b c}"]);
+                    
+                }else{
+                    ctx.font = "36px serif";
+                    ctx.textBaseline = "middle";
+                    ctx.textAlign = "center";
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillText(resultText, canvas.width/2, canvas.height/2)
+                        
+                }
                 // ストローク消去
                 strokes=[];
                 
 
             })
-            .catch(() => alert('recognition server: request error'));
+            .catch((error) => alert(error.message));
 
         } else {
             alert('解答を記入してください');

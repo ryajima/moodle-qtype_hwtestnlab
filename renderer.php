@@ -90,6 +90,21 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
         $input .= html_writer::tag('button', 'Undo', array('id' => 'undoBtn', 'type' => 'button', 'class' => 'btn btn-secondary'));
         $input .= html_writer::tag('button', 'Commit', array('id' => 'sendBtn', 'type' => 'button', 'class' => 'btn btn-danger'));
         $input .= html_writer::end_tag('div');
+        // display recognition-resluts
+        $input .= '<script type="text/javascript" id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML">
+        MathJax.Hub.Config({
+            extensions: ["tex2jax.js"],
+            jax: ["input/TeX","output/HTML-CSS"],
+            tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+          });
+        </script> '; 
+        // $input .= "<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'>
+        // MathJax.Hub.Config({
+        //   tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+        // });
+        // </script>" ;      
+        $input .= html_writer::tag('p', '${}$', array('id' => 'ptnDisp'));
+
 
         $this->page->requires->js( new moodle_url($CFG->wwwroot . '/question/type/hwtestnlab/module.js'));
 
