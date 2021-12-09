@@ -103,11 +103,9 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
         //   tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
         // });
         // </script>" ;      
-        $input .= html_writer::tag('p', '${}$', array('id' => 'ptnDisp'));
-
+        $input .= html_writer::tag('div', '${}$', array('id' => 'ptnDisp', 'width' => '400px', 'height' => '80px', 'background' => 'gray'));
 
         $this->page->requires->js( new moodle_url($CFG->wwwroot . '/question/type/hwtestnlab/module.js'));
-
 
 
         if ($placeholder) {

@@ -48,11 +48,16 @@
     //     canvas.height = qimg.height;
     // });
 
-    // スタイル
+    // 手書き入力のスタイル
     canvas.width  = 400;
     canvas.height = 100;
     canvas.style.border = "1px solid"; 
     canvas.style.background = "#fffefc";
+    // 認識結果表示のスタイル
+    ptnDisp.width = 400;
+    ptnDisp.heigth = 100;
+    ptnDisp.style.background = "ffeeee";
+    
 
     // キャンバスの背景カラーを決定
     var ctx = canvas.getContext('2d');
@@ -336,11 +341,6 @@
                     ctx.font = "36px serif";
                     ctx.textBaseline = "middle";
                     ctx.textAlign = "center";
-                    //ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    //ctx.fillText(resultText, canvas.width/2, canvas.height/2)
-                    // var str = "<math>";
-                    // str += "<mi>i</mi>";
-                    // str += "</math>";
                     ptnDisp.innerHTML =  "$$" + resultText +"$$";
                     MathJax.Hub.Typeset(ptnDisp);
                     // var math = MathJax.Hub.getAllJax("ptnDisp")[0];
@@ -362,7 +362,7 @@
             .catch((error) => alert(error.message));
 
         } else {
-            alert('解答を記入してください');
+            alert('手書き解答欄に入力してください');
         }
     }
     
