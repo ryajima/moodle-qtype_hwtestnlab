@@ -49,7 +49,7 @@
     // });
 
     // 手書き入力のスタイル
-    canvas.width  = 400;
+    canvas.width  = 800;
     canvas.height = 100;
     canvas.style.border = "1px solid"; 
     canvas.style.background = "#fffefc";

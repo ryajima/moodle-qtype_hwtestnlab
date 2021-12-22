@@ -80,15 +80,25 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
         // hand-writing answer box
         //$input .= html_writer::empty_tag('br');
         $input = html_writer::start_tag('div', array('class' => 'qanda'));
+        // $input .= '<iframe 
+        // srcdoc="<canvas id=&quot;myCanvas&quot; class=&quot;qanda&quot;></canvas>" width="800" height="100"></iframe>';
+        $input .= html_writer::start_tag('div', array('width' => '400', 'height' => '1c00', 'style' => 'overflow: scroll;'));
+        $input .= html_writer::start_tag('div', array('style' => 'overflow: hidden;'));
+        
         $input .= html_writer::start_tag('canvas', array('id' => 'myCanvas' ,'class' => 'qanda'));
         $input .= html_writer::end_tag('canvas');
+        
+        $input .= html_writer::end_tag('div');
+        $input .= html_writer::end_tag('div');
+        
+
         $input .= html_writer::end_tag('div');
         // action buttons of action for strokes
         $input .= html_writer::empty_tag('br');
         $input .= html_writer::start_tag('div', array('class' => 'my-2'));
-        $input .= html_writer::tag('button', 'Clear', array('id' => 'clrBtn', 'type' => 'button', 'class' => 'btn btn-primary'));
-        $input .= html_writer::tag('button', 'Undo', array('id' => 'undoBtn', 'type' => 'button', 'class' => 'btn btn-secondary'));
-        $input .= html_writer::tag('button', 'Commit', array('id' => 'sendBtn', 'type' => 'button', 'class' => 'btn btn-danger'));
+        $input .= html_writer::tag('button', '消去', array('id' => 'clrBtn', 'type' => 'button', 'class' => 'btn btn-primary'));
+        $input .= html_writer::tag('button', '戻す', array('id' => 'undoBtn', 'type' => 'button', 'class' => 'btn btn-secondary'));
+        $input .= html_writer::tag('button', '認識', array('id' => 'sendBtn', 'type' => 'button', 'class' => 'btn btn-danger'));
         $input .= html_writer::end_tag('div');
         // display recognition-resluts
         $input .= '<script type="text/javascript" id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML">
@@ -103,7 +113,7 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
         //   tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
         // });
         // </script>" ;      
-        $input .= html_writer::tag('div', '${}$', array('id' => 'ptnDisp', 'width' => '400px', 'height' => '80px', 'background' => 'gray'));
+        $input .= html_writer::tag('div', '${}$', array('id' => 'ptnDisp', 'display' => 'inline-block', 'width' => '400px', 'height' => '80px', 'background' => 'gray'));
 
         $this->page->requires->js( new moodle_url($CFG->wwwroot . '/question/type/hwtestnlab/module.js'));
 

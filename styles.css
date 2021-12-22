@@ -1,11 +1,11 @@
-.que.hwtestnlab .answer {
+/* .que.hwtestnlab .answer {
     padding: 0.3em;
     display: inline;
 }
 
 .que.hwtestnlab .answer input {
     width: 80%;
-}
+} */
 
 /* Handwriting answerbox */
 #myCanvas {
@@ -64,4 +64,4 @@ body#page-question-type-hwtestnlab div[id^=fitem_id_][id*=feedback_] {
     padding-top: 5px;
     border: 1px solid #bbb;
     border-top: 0;
-}
+} 
