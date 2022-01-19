@@ -23,13 +23,22 @@
  */
 
 
-(function() {
+//(function() {
     var qid = document.getElementById('qid');
     var canvas  = document.getElementById('myCanvas');
     var sendBtn = document.getElementById('sendBtn');
     var clrBtn  = document.getElementById('clrBtn');
     var undoBtn = document.getElementById('undoBtn');
     var ptnDisp = document.getElementById('ptnDisp');
+
+    var initvalues;
+    var inputText;
+    function init(Y, initvariables) {
+        initvalues = initvariables;
+        console.log("qid：%s", initvalues.boxId);
+        inputText = document.getElementById(initvalues.boxId); 
+
+    }
 
 
     // レスポンシブサイズ
@@ -49,14 +58,14 @@
     // });
 
     // 手書き入力のスタイル
-    canvas.width  = 800;
+    canvas.width  = 400;
     canvas.height = 100;
     canvas.style.border = "1px solid"; 
     canvas.style.background = "#fffefc";
     // 認識結果表示のスタイル
-    ptnDisp.width = 400;
-    ptnDisp.heigth = 100;
-    ptnDisp.style.background = "ffeeee";
+    // ptnDisp.width = 400;
+    // ptnDisp.heigth = 100;
+    // ptnDisp.style.background = "ffeeee";
     
 
     // キャンバスの背景カラーを決定
@@ -346,6 +355,27 @@
                     // var math = MathJax.Hub.getAllJax("ptnDisp")[0];
                     // MathJax.Hub.Queue(["Text",math,"\\displaystyle{a b c}"]);
                     
+                    // var resultObj = new Object();
+                    // resultObj = {
+                    //     "text" : resultText
+                    // };
+                    // var jsonData = JSON.stringify(resultObj);
+                    // $("[name=resultJson").val(jsonData);
+
+
+                    // let xhr = new XMLHttpRequest();
+                    // xhr.open("GET", "./renderer.php?resulttext="+resultText,true);
+                    // xhr.responseType = "text";
+                    // xhr.addEventListener('load', function(event){
+                    //     console.log(xhr.response);
+                    //     console.log(event.target.response);
+                    // });
+                    // xhr.send(null);
+                    
+                    inputText.value = resultText;
+                    console.log("実行後：%s", inputText.value);
+
+
                 }else{
                     ctx.font = "36px serif";
                     ctx.textBaseline = "middle";
@@ -389,4 +419,4 @@
     }
   
 
-})();
+//})();
