@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Short answer question type version information.
+ * Admin settings for the handwriting shortanswer question type.
  *
  * @package    qtype
  * @subpackage hwtestnlab
@@ -25,9 +25,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'qtype_hwtestnlab';
-$plugin->version   = 2022021700;
+if ($ADMIN->fulltree) {
+    $settings->add(new admin_setting_configtext('qtype_hwtestnlab/recognitionurl',
+    new lang_string('recognitionurl', 'qtype_hwtestnlab'),
+    new lang_string('recognitionurl_desc', 'qtype_hwtestnlab'), ''));
 
-$plugin->requires  = 2021051700;
 
-$plugin->maturity  = MATURITY_STABLE;
+}

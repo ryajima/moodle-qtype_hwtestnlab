@@ -40,6 +40,7 @@ class qtype_hwtestnlab_edit_form extends question_edit_form {
             get_string('caseno', 'qtype_hwtestnlab'),
             get_string('caseyes', 'qtype_hwtestnlab')
         ];
+
         $mform->addElement('select', 'usecase',
                 get_string('casesensitive', 'qtype_hwtestnlab'), $menu);
         $mform->setDefault('usecase', $this->get_default_value('usecase', $menu[0]));

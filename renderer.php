@@ -53,6 +53,9 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
             'class' => 'form-control d-inline',
         );
 
+        $config = get_config('qtype_hwtestnlab');
+        $api = $config->recognitionurl;
+
         if ($options->readonly) {
             $inputattributes['readonly'] = 'readonly';
         }
@@ -119,7 +122,7 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
         // js読み込み
         $this->page->requires->js( new moodle_url($CFG->wwwroot . '/question/type/hwtestnlab/module.js'));       
         // init関数呼び出し
-        $PAGE->requires->js_init_call('init', array(array('boxId' => $inputname)), true);
+        $PAGE->requires->js_init_call('init', array(array('boxId' => $inputname, 'recognitionurl' => $api)), true);
         
         // 解答欄
         if ($placeholder) {
