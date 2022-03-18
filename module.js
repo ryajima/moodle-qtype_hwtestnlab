@@ -36,23 +36,89 @@ var recogUrl;
 // 認識モデル
 var modelType = "math";
 
-// HTML要素の取得
-var qid = document.getElementById('qid');
-var canvas  = document.getElementById('myCanvas');
-var sendBtn = document.getElementById('sendBtn');
-var clrBtn  = document.getElementById('clrBtn');
-var undoBtn = document.getElementById('undoBtn');
-var ptnDisp = document.getElementById('ptnDisp');
+// 要素
+var canvas;
+var sendBtn;
+var clrBtn;
+var undoBtn;
+var ptnDisp;
 
-// PHP変数ロード
+var isMouseDown;
+
+// ペンの色・太さ
+var defosize = 1;
+var defocolor = "#000000";
+var defoalpha = 1.0;
+
+//　ストロークオブジェクト
+var answers = {};
+
+
+// マウス継続値の初期値
+// var mouseX = "";
+// var mouseY = "";
+
+// // ストローク座標のリスト
+// var XList = [];
+// var YList = [];
+// var PList = [];
+// // ストロークフラグ
+// var isStroke = false;
+// // ストロークのオブジェクト
+// var points = [];
+
+// // 時間計測用
+// var startTime;
+// var endTime;
+
+
+// initialize
 var initvalues;
 var inputText;
+var qaId;
 function init(Y, initvariables) {
     initvalues = initvariables;
-    console.log("qid：%s", initvalues.boxId);
-    inputText = document.getElementById(initvalues.boxId);
+    qaId     = initvalues.qaId;
     recogUrl = initvalues.recognitionurl;
+    // console.log("qid：%s", qaId);
+
+    // element
+    inputText = document.getElementById(qaId);
+    canvas    = document.getElementById('canvas' +qaId);
+    sendBtn   = document.getElementById('sendBtn'+qaId);
+    clrBtn    = document.getElementById('clrBtn' +qaId);
+    undoBtn   = document.getElementById('undoBtn'+qaId);
+    ptnDisp   = document.getElementById('ptnDisp'+qaId);
+    
+    // canvas style
+    canvas.width  = 700;
+    canvas.height = 175;
+    canvas.style.border = "1px solid"; 
+    canvas.style.background = "#fffefc";
+
+    // Path
+    var ctx = canvas.getContext('2d');
+    ctx.beginPath();
+
+    // イベントリスナー
+    // canvas
+    canvas.addEventListener('mousemove', onMove, false);
+    canvas.addEventListener('mousedown', onClick, false);
+    canvas.addEventListener('mouseup', drawEnd, false);
+    canvas.addEventListener('mouseout', drawEnd, false);
+    canvas.addEventListener('touchmove', onTouchMove, false);
+    canvas.addEventListener('touchstart', onTouch, false);
+    canvas.addEventListener('touchend', drawEnd, false);    
+    // 送信ボタン
+    sendBtn.addEventListener('click', sendJson, false);
+    // 消去ボタン
+    clrBtn.addEventListener('click', clearCanvas, false);
+    // Undoボタン
+    undoBtn.addEventListener('click', undoBtnClk, false);
+
+    isMouseDown = false;
 }
+
 
 
 // レスポンシブサイズ
@@ -71,11 +137,11 @@ function init(Y, initvariables) {
 //     canvas.height = qimg.height;
 // });
 
-// canvasのスタイル
-canvas.width  = 700;
-canvas.height = 175;
-canvas.style.border = "1px solid"; 
-canvas.style.background = "#fffefc";
+// // canvasのスタイル
+// canvas.width  = 700;
+// canvas.height = 175;
+// canvas.style.border = "1px solid"; 
+// canvas.style.background = "#fffefc";
 // 認識結果表示のスタイル
 // ptnDisp.width = 400;
 // ptnDisp.heigth = 100;
@@ -83,49 +149,11 @@ canvas.style.background = "#fffefc";
 
 
 // キャンバスの背景カラーを決定
-var ctx = canvas.getContext('2d');
-ctx.beginPath();
+// var ctx = canvas.getContext('2d');
+// ctx.beginPath();
 //ctx.fillStyle = "#ffffff";
 //ctx.fillRect(0, 0, 400, 100);
 
-// ペンの色・太さ
-var defosize = 1;
-var defocolor = "#000000";
-var defoalpha = 1.0;
-
-// マウス継続値の初期値
-var mouseX = "";
-var mouseY = "";
-
-// ストローク座標のリスト
-var XList = [];
-var YList = [];
-var PList = [];
-// ストロークフラグ
-var isStroke = false;
-// ストロークのオブジェクト
-var strokes = [];
-var points = [];
-
-// 時間計測用
-var startTime;
-var endTime;
-
-// イベントリスナー
-// canvas
-canvas.addEventListener('mousemove', onMove, false);
-canvas.addEventListener('mousedown', onClick, false);
-canvas.addEventListener('mouseup', drawEnd, false);
-canvas.addEventListener('mouseout', drawEnd, false);
-canvas.addEventListener('touchmove', onTouchMove, false);
-canvas.addEventListener('touchstart', onTouch, false);
-canvas.addEventListener('touchend', drawEnd, false);    
-// 送信ボタン
-sendBtn.addEventListener('click', sendJson, false);
-// 消去ボタン
-clrBtn.addEventListener('click', clearCanvas, false);
-// Undoボタン
-undoBtn.addEventListener('click', undoBtnClk, false);
 
 // スクロール止める止めないの関数
 function handleTouchMove(event) {
@@ -139,18 +167,32 @@ function onMove(e) {
         var X = ~~(e.clientX - rect.left);
         var Y = ~~(e.clientY - rect.top);
         //draw 関数にマウスの位置を渡す
-        draw(X, Y);
+        draw(X, Y, e.target.getContext('2d'), e.target.id.replace('canvas', ''));
+        isMouseDown = true;
     };
 };
 
 //マウスが左クリックされると発火。
 function onClick(e) {
     if (e.button === 0) {
+        var qaid = e.target.id.replace('canvas', '');
+        if(!answers.hasOwnProperty(qaid)) 
+            answers[qaid] = {
+                'XList': [],
+                'YList': [],
+                'PList': [],
+                'points': [],
+                'istroke' : false,
+                'mouseX' : "",
+                'mouseY' : "",
+                'starttime' : "",
+                'endtime' : "" };
         var rect = e.target.getBoundingClientRect();
         var X = ~~(e.clientX - rect.left);
         var Y = ~~(e.clientY - rect.top);
         //draw 関数にマウスの位置を渡す
-        draw(X, Y);
+        draw(X, Y, e.target.getContext('2d'), qaid);
+        isMouseDown = true;
     }
 };
 
@@ -161,7 +203,7 @@ function onTouchMove(e) {
     var X = ~~(touch.clientX - rect.left);
     var Y = ~~(touch.clientY - rect.top);
     //draw 関数にタッチの位置を渡す
-    draw(X, Y);
+    draw(X, Y, e.target.getContext('2d'), e.target.id.replace('canvas', ''));
 };
 
 //タッチされると発火。
@@ -171,26 +213,27 @@ function onTouch(e) {
     var X = ~~(touch.clientX - rect.left);
     var Y = ~~(touch.clientY - rect.top);
     //draw 関数にタッチの位置を渡す
-    draw(X, Y);
+    draw(X, Y, e.target.getContext('2d'), e.target.id.replace('canvas', ''));
     //スクロール禁止
     document.addEventListener('touchmove', handleTouchMove, { passive: false });
 };
 
 //渡されたマウス位置を元に直線を描く関数
-function draw(X, Y) {
+function draw(X, Y, ctx, qaid) {
+    //console.log(qaid);
     ctx.beginPath();
     ctx.globalAlpha = defoalpha;
     
     //マウス継続値によって場合分け、直線の始点を決定
-    if (mouseX === "") {
+    if (answers[qaid].mouseX === "") {
         //継続値が初期値の場合は、現在のマウス位置を始点とする
         ctx.moveTo(X, Y);
-        startTime = Date.now();
-        isStroke = true;
+        answers[qaid].startTime = Date.now();
+        answers[qaid].isStroke = true;
 
     } else {
         //継続値が初期値ではない場合は、前回の終点を次の始点とする
-        ctx.moveTo(mouseX, mouseY);
+        ctx.moveTo(answers[qaid].mouseX, answers[qaid].mouseY);
     
     }
     //現在のマウス位置を終点とする
@@ -203,61 +246,60 @@ function draw(X, Y) {
     ctx.stroke();
 
     // 描画点の座標をリストに挿入
-    XList.push(X);
-    YList.push(Y);
-    PList.push([X, Y]);
+    answers[qaid].XList.push(X);
+    answers[qaid].YList.push(Y);
+    answers[qaid].PList.push([X, Y]);
 
     //マウス継続値に現在のマウス位置、つまりゴール位置を代入
-    mouseX = X;
-    mouseY = Y;
+    answers[qaid].mouseX = X;
+    answers[qaid].mouseY = Y;
+    console.log(JSON.stringify(answers[qaid]));
 };
 
 //左クリック終了、またはマウスが領域から外れた際、継続値を初期値に戻す
-function drawEnd() {
-    mouseX = "";
-    mouseY = "";
-
-    if(isStroke) {
-        //console.log(XList);
-        //console.log(YList);
-        endTime = Date.now();
-        strokes.push({type:'stroke',
-                            x: XList, 
-                            y: YList,
-                            startTime: startTime,
-                            endTime: endTime,
-                            duration: endTime-startTime,
-                            delete: 'No'});
-        
-        
-        // let p = [];
-        // for(let i in XList.length){
-        //     p.push([XList[i], YList[i]]);
-        // }
-        points.push(PList);
-        // debug用　json表示
-        console.log(JSON.stringify(points));
-
-        isStroke = false;
+function drawEnd(e) {
+    if (isMouseDown)
+    {
+        var qaid = e.target.id.replace('canvas', '');
+        answers[qaid].mouseX = "";
+        answers[qaid].mouseY = "";
+    
+        if(answers[qaid].isStroke) {
+            //console.log(XList);
+            //console.log(YList);
+            answers[qaid].endTime = Date.now();
+            answers[qaid].points.push(answers[qaid].PList); 
+            answers[qaid].isStroke = false;
+        }
+    
+   
+        // ストローク座標リストの初期化
+        answers[qaid].XList = [];
+        answers[qaid].YList = [];
+        answers[qaid].PList = [];
+        isMouseDown = false;
     }
-
-    // ストローク座標リストの初期化
-    XList = [];
-    YList = [];
-    PList = [];
-
     //スクロール復帰
     document.removeEventListener('touchmove', handleTouchMove, { passive: false });
 }
 
 // 再描画
-function reflesh(){
+function reflesh(qaid){
+    // コンテキスト取得
+    var canvas = document.getElementById('canvas'+ qaid);
+    var ctx = canvas.getContext('2d');
+       
+    // 解答欄の消去
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i in strokes){
-        for(let j in strokes[i].x) {
 
-            let X = strokes[i].x[j];
-            let Y = strokes[i].y[j];
+    // 再描画
+    var mouseX = "";
+    var mouseY = "";
+    for (let stroke of answers[qaid].points){
+        for(let coordinate of stroke) {
+            
+            let X = coordinate[0];
+            let Y = coordinate[1];
             
             ctx.beginPath();
             ctx.globalAlpha = defoalpha;
@@ -308,8 +350,6 @@ function reflesh(){
 //                 console.log(response.status); //レスポンスのHTTPステータスコード
 //                 // alert('回答を送信しました');
 //                 strokes=[];
-//                 // 次のページ
-//                 nextpage();
 //             }
 //         });
 //     } else {
@@ -317,16 +357,22 @@ function reflesh(){
 //     }
 // }
 
-// 送信 -> 認識サーバ
-function sendJson(){
-    if(strokes.length > 0){
-        //var userid = sessionStorage.getItem('userid');
-        //var userid = 'testuser';
-        //var points = "[[[8096,4683],[8096,4604],[8070,4577],[8070,4551],[8043,4524],[8017,4498],[7964,4471],[7938,4471],[7858,4471],[7805,4471],[7726,4471],[7646,4471],[7567,4498],[7488,4524],[7329,4630],[7223,4736],[7064,4842],[6985,4948],[6906,5001],[6879,5106],[6826,5186],[6800,5212],[6800,5318],[6800,5398],[6800,5530],[6906,5662],[7064,5847],[7223,6059],[7382,6218],[7514,6350],[7673,6456],[7752,6509],[7858,6562],[7911,6588],[7964,6588],[7990,6588],[8070,6588],[8123,6562],[8176,6429],[8229,6244],[8281,6112],[8334,5953],[8334,5847],[8414,5689],[8414,5636],[8440,5530],[8440,5477],[8467,5424],[8467,5398],[8467,5450],[8573,5609],[8678,5794],[8811,6006],[8864,6165],[9022,6350],[9075,6456],[9181,6615],[9234,6668],[9287,6747],[9313,6773],[9313,6720],[9340,6694],[9340,6641],[9366,6588],[9366,6535]],[[9472,4657],[9472,4657],[9472,4683],[9631,4736],[9869,4763],[10001,4763],[10213,4763],[10398,4763],[10610,4763],[10795,4763],[10874,4763],[11007,4763],[11033,4736]],[[10213,3704],[10213,3704],[10213,3810],[10213,3916],[10186,4101],[10186,4233],[10186,4498],[10186,4657],[10186,4921],[10186,5186],[10213,5477],[10266,5741],[10372,5980],[10451,6218],[10530,6350],[10663,6456],[10769,6588],[10874,6694],[10901,6720],[10927,6773],[10954,6800]]]";
+// 認識ボタンが押された
+function sendJson(e){
+    var qaid = e.target.id.replace('sendBtn', '');
+    var canvas  = document.getElementById('canvas' + qaid);
+    var ptnDisp = document.getElementById('ptnDisp'+ qaid);
+    var ctx = canvas.getContext('2d');
+
+    console.log(qaid);
+
+    if(answers[qaid].points.length > 0){
+
+        // 認識サーバ送信オプション
         var formdata = new FormData();
         formdata.append("typeData", "online");
         formdata.append("language", modelType);
-        formdata.append("points", JSON.stringify(points));
+        formdata.append("points", JSON.stringify(answers[qaid].points));
         var requestOptions = {
             method: 'POST',
             mode: 'cors',
@@ -335,6 +381,8 @@ function sendJson(){
             //headers: {"Accept": "application/json","Content-Type": "application/json"},
             body: formdata
         };
+
+        // HTTP POST->認識サーバ（非同期１）
         fetch(recogUrl, requestOptions)
         .then((response) => response.json())
         .then((responsejson) => {
@@ -361,33 +409,43 @@ function sendJson(){
                 ctx.fillText(resultText, canvas.width/2, canvas.height/2)
                     
             }
-            // ストローク消去
-            strokes=[];
-            
-
         })
         .catch((error) => alert(error.message+'\n'+recogUrl+'にアクセスできません．'));
 
+        // HTTP POST->Moodleサーバ（非同期２）
+        fetch('../../question/type/hwtestnlab/strokestore.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(answers[qaid].points) 
+        })
+        .then((responsemoodle) => responsemoodle.json())
+        .then((responsejsonmoodle) => console.log(responsejsonmoodle))
+        .catch((error) => console.log(error));
+
     } else {
-        alert('手書き解答欄に入力してください');
+        alert('解答を入力してください');
     }
 }
 
 
-// Clearボタン押下
-function clearCanvas(){
+// 消去ボタン押下
+function clearCanvas(e){
+    var qaid = e.target.id.replace('clrBtn', '');
+    var canvas = document.getElementById('canvas'+ qaid);
+    var ctx = canvas.getContext('2d');    
+    // 全ストロークを削除
+    answers[qaid].points=[];
+    // 解答欄を初期化
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    strokes=[];
-    points=[];
 }
 
-// Undoボタン押下
-function undoBtnClk() {
+// 戻すボタン押下
+function undoBtnClk(e) {
+    var qaid = e.target.id.replace('undoBtn', '');
     // 直前のストロークを削除
-    strokes.pop();
-    points.pop();
-    // 再描画
-    reflesh();
+    answers[qaid].points.pop();
+    // 解答欄を再描画
+    reflesh(qaid);
 }
 
 

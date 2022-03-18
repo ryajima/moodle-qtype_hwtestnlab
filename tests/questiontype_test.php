@@ -18,7 +18,7 @@
  * Unit tests for the hwtestnlab question type class.
  *
  * @package    qtype_hwtestnlab
- * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
+ * @copyright  2021 Ryo Yajima <yajima.leonad@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -34,7 +34,7 @@ require_once($CFG->dirroot . '/question/type/hwtestnlab/edit_hwtestnlab_form.php
 /**
  * Unit tests for the hwtestnlab question type class.
  *
- * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
+ * @copyright  2021 Ryo Yajima <yajima.leonad@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qtype_hwtestnlab_test extends advanced_testcase {

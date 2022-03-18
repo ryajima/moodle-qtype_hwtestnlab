@@ -19,7 +19,7 @@
  *
  * @package    qtype
  * @subpackage hwtestnlab
- * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
+ * @copyright  2021 Ryo Yajima <yajima.leonad@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Generates the output for short answer questions.
  *
- * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
+ * @copyright  2021 Ryo Yajima <yajima.leonad@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qtype_hwtestnlab_renderer extends qtype_renderer {
@@ -80,28 +80,20 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
         }
         $input = html_writer::empty_tag('input', $inputattributes) . $feedbackimg;
 
-        // hand-writing answer box
-        //$input .= html_writer::empty_tag('br');
+        // handwriting answer box
         $input .= html_writer::start_tag('div', array('class' => 'qanda'));
-        
-        // srcdoc="<canvas id=&quot;myCanvas&quot; class=&quot;qanda&quot;></canvas>" width="800" height="100"></iframe>';
-        //$input .= html_writer::start_tag('div', array('width' => '400', 'height' => '100', 'style' => 'overflow: scroll;'));
-        $input .= html_writer::start_tag('div', array('style' => 'overflow: hidden;'));
-        
-        $input .= html_writer::start_tag('canvas', array('id' => 'myCanvas' ,'class' => 'qanda'));
-        $input .= html_writer::end_tag('canvas');
-        
+        $input .= html_writer::start_tag('div', array('style' => 'overflow: hidden;'));      
+        $input .= html_writer::start_tag('canvas', array('id' => 'canvas'.$inputname ,'class' => 'qanda'));
+        $input .= html_writer::end_tag('canvas');       
         $input .= html_writer::end_tag('div');
-        //$input .= html_writer::end_tag('div');
-        
+        $input .= html_writer::end_tag('div');
 
-        $input .= html_writer::end_tag('div');
         // action buttons of action for strokes
         $input .= html_writer::empty_tag('br');
         $input .= html_writer::start_tag('div', array('class' => 'my-2'));
-        $input .= html_writer::tag('button', '消去', array('id' => 'clrBtn', 'type' => 'button', 'class' => 'btn btn-primary'));
-        $input .= html_writer::tag('button', '戻す', array('id' => 'undoBtn', 'type' => 'button', 'class' => 'btn btn-secondary'));
-        $input .= html_writer::tag('button', '認識', array('id' => 'sendBtn', 'type' => 'button', 'class' => 'btn btn-danger'));
+        $input .= html_writer::tag('button', '消去', array('id' => 'clrBtn'.$inputname, 'type' => 'button', 'class' => 'btn btn-primary'));
+        $input .= html_writer::tag('button', '戻す', array('id' => 'undoBtn'.$inputname, 'type' => 'button', 'class' => 'btn btn-secondary'));
+        $input .= html_writer::tag('button', '認識', array('id' => 'sendBtn'.$inputname, 'type' => 'button', 'class' => 'btn btn-danger'));
         $input .= html_writer::end_tag('div');
 
         // display recognition-resluts with MathJAX
@@ -117,12 +109,12 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
         //   tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
         // });
         // </script>" ;      
-        $input .= html_writer::tag('div', '${}$', array('id' => 'ptnDisp', 'display' => 'inline-block', 'width' => '400px', 'height' => '80px', 'background' => 'gray'));
+        $input .= html_writer::tag('div', '${}$', array('id' => 'ptnDisp'.$inputname, 'display' => 'inline-block', 'width' => '400px', 'height' => '80px', 'background' => 'gray'));
 
         // js読み込み
         $this->page->requires->js( new moodle_url($CFG->wwwroot . '/question/type/hwtestnlab/module.js'));       
         // init関数呼び出し
-        $PAGE->requires->js_init_call('init', array(array('boxId' => $inputname, 'recognitionurl' => $api)), true);
+        $PAGE->requires->js_init_call('init', array(array('qaId' => $inputname, 'recognitionurl' => $api)), true);
         
         // 解答欄
         if ($placeholder) {

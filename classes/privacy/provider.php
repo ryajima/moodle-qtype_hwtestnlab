@@ -18,7 +18,7 @@
  * Privacy Subsystem implementation for qtype_hwtestnlab.
  *
  * @package    qtype_hwtestnlab
- * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
+ * @copyright  2021 Ryo Yajima <yajima.leonad@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -33,7 +33,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Privacy Subsystem for qtype_hwtestnlab implementing user_preference_provider.
  *
- * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
+ * @copyright  2021 Ryo Yajima <yajima.leonad@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements

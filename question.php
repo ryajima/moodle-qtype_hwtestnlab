@@ -19,7 +19,7 @@
  *
  * @package    qtype
  * @subpackage hwtestnlab
- * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
+ * @copyright  2021 Ryo Yajima <yajima.leonad@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -31,7 +31,7 @@ require_once($CFG->dirroot . '/question/type/questionbase.php');
 /**
  * Represents a short answer question.
  *
- * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
+ * @copyright  2021 Ryo Yajima <yajima.leonad@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qtype_hwtestnlab_question extends question_graded_by_strategy

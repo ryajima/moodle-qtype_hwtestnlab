@@ -16,7 +16,7 @@ GNU GPL v3 or later
 
 ## Auther
 
-Ryo YAJIMA (escaryo21work@gmail.com)
+Ryo YAJIMA (yajima.leonad@gmail.com)
 
 (2021 Sep. 1st)
 

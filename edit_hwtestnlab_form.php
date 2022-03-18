@@ -19,7 +19,7 @@
  *
  * @package    qtype
  * @subpackage hwtestnlab
- * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
+ * @copyright  2021 Ryo Yajima <yajima.leonad@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Short answer question editing form definition.
  *
- * @copyright  2021 Ryo Yajima <escaryo21work@gmail.com>
+ * @copyright  2021 Ryo Yajima <yajima.leonad@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qtype_hwtestnlab_edit_form extends question_edit_form {
