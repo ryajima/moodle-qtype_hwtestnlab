@@ -253,7 +253,6 @@ function draw(X, Y, ctx, qaid) {
     //マウス継続値に現在のマウス位置、つまりゴール位置を代入
     answers[qaid].mouseX = X;
     answers[qaid].mouseY = Y;
-    console.log(JSON.stringify(answers[qaid]));
 };
 
 //左クリック終了、またはマウスが領域から外れた際、継続値を初期値に戻す
