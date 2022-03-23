@@ -69,6 +69,7 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
 
         if ($options->readonly) {
             $inputattributes['readonly'] = 'readonly';
+            $inputattributes['type'] = 'text';
         }
 
         $feedbackimg = '';
@@ -89,6 +90,7 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
             $placeholder = $matches[0];
             $inputattributes['size'] = round(strlen($placeholder) * 1.1);
         }
+
         $input = html_writer::empty_tag('input', $inputattributes) . $feedbackimg;
 
         // handwriting answer box
@@ -100,34 +102,39 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
         $input .= html_writer::end_tag('div');
 
         // action buttons of action for strokes
-        $input .= html_writer::empty_tag('br');
-        $input .= html_writer::start_tag('div', array('class' => 'my-2'));
-        $input .= html_writer::tag('button', '消去', array('id' => 'clrBtn'.$inputname, 'type' => 'button', 'class' => 'btn btn-primary'));
-        $input .= html_writer::tag('button', '戻す', array('id' => 'undoBtn'.$inputname, 'type' => 'button', 'class' => 'btn btn-secondary'));
-        $input .= html_writer::tag('button', '認識', array('id' => 'sendBtn'.$inputname, 'type' => 'button', 'class' => 'btn btn-danger'));
-        $input .= html_writer::end_tag('div');
+        if (!$options->readonly){
+            $input .= html_writer::empty_tag('br');
+            $input .= html_writer::start_tag('div', array('class' => 'my-2'));
+            $input .= html_writer::tag('button', '消去', array('id' => 'clrBtn'.$inputname, 'type' => 'button', 'class' => 'btn btn-primary'));
+            $input .= html_writer::tag('button', '戻す', array('id' => 'undoBtn'.$inputname, 'type' => 'button', 'class' => 'btn btn-secondary'));
+            $input .= html_writer::tag('button', '認識', array('id' => 'sendBtn'.$inputname, 'type' => 'button', 'class' => 'btn btn-danger'));
+            $input .= html_writer::end_tag('div');
+        }
 
-        // display recognition-resluts with MathJAX
+        // MathJAXによる数式表示
         $input .= '<script type="text/javascript" id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML">
         MathJax.Hub.Config({
             extensions: ["tex2jax.js"],
             jax: ["input/TeX","output/HTML-CSS"],
             tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
           });
-        </script> '; 
-        // $input .= "<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'>
-        // MathJax.Hub.Config({
-        //   tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
-        // });
-        // </script>" ;      
-        $input .= html_writer::tag('div', '${}$', array('id' => 'ptnDisp'.$inputname, 'display' => 'inline-block', 'width' => '400px', 'height' => '80px', 'background' => 'gray'));
+        </script> ';
+        if (!$options->readonly){  // 問題解答ページ
+            $input .= html_writer::tag('div', '${}$', array('id' => 'ptnDisp'.$inputname, 'display' => 'inline-block', 'width' => '400px', 'height' => '80px', 'background' => 'gray'));
+        } else {  // 答案ページ
+            //$input .= html_writer::tag('div', '${$$ $$}$', array('id' => 'ptnDisp'.$inputname, 'display' => 'inline-block', 'width' => '400px', 'height' => '80px', 'background' => 'gray'));            
+        }
 
         // js読み込み
         $this->page->requires->js( new moodle_url($CFG->wwwroot . '/question/type/hwtestnlab/module.js'));       
         // init関数呼び出し
-        $PAGE->requires->js_init_call('init', array(array('qaId' => $inputname, 'recognitionurl' => $api, 'previousStroke' => $stroke)), true);
-        
-        // 解答欄
+        $initattributes = array(array(
+            'qaId' => $inputname, 
+            'recognitionurl' => $api, 
+            'previousStroke' => $stroke, 
+            'readonly' => $options->readonly));
+        $PAGE->requires->js_init_call('init', $initattributes, true);
+                
         if ($placeholder) {
             $inputinplace = html_writer::tag('label', get_string('answer'),
                     array('for' => $inputattributes['id'], 'class' => 'accesshide'));

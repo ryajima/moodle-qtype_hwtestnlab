@@ -44,15 +44,19 @@ var defoalpha = 1.0;
 //　ストロークオブジェクト
 var answers = {};
 
-// 変数初期化
+// PHPからの変数
 var initvalues;
 var inputText;
 var qaId;
 var prevStroke = {};
+var readonly;
+
+// 解答欄初期化
 function init(Y, initvariables) {
     initvalues = initvariables;
     qaId       = initvalues.qaId;
     recogUrl   = initvalues.recognitionurl;
+    readonly   = initvalues.readonly;
     prevStroke[qaId] = initvalues.previousStroke;
     if (prevStroke[qaId] == ''){
         prevStroke[qaId] = [];
@@ -63,11 +67,13 @@ function init(Y, initvariables) {
 
     // element
     canvas    = document.getElementById('canvas' +qaId);
-    sendBtn   = document.getElementById('sendBtn'+qaId);
-    clrBtn    = document.getElementById('clrBtn' +qaId);
-    undoBtn   = document.getElementById('undoBtn'+qaId);
-    ptnDisp   = document.getElementById('ptnDisp'+qaId);
-    
+    if (!readonly){
+        sendBtn   = document.getElementById('sendBtn'+qaId);
+        clrBtn    = document.getElementById('clrBtn' +qaId);
+        undoBtn   = document.getElementById('undoBtn'+qaId);
+        ptnDisp   = document.getElementById('ptnDisp'+qaId);
+    }
+
     // canvas style
     canvas.width  = 700;
     canvas.height = 175;
@@ -79,20 +85,22 @@ function init(Y, initvariables) {
     ctx.beginPath();
 
     // イベントリスナー
-    // canvas
-    canvas.addEventListener('mousemove', onMove, false);
-    canvas.addEventListener('mousedown', onClick, false);
-    canvas.addEventListener('mouseup', drawEnd, false);
-    canvas.addEventListener('mouseout', drawEnd, false);
-    canvas.addEventListener('touchmove', onTouchMove, false);
-    canvas.addEventListener('touchstart', onTouch, false);
-    canvas.addEventListener('touchend', drawEnd, false);    
-    // 送信ボタン
-    sendBtn.addEventListener('click', sendJson, false);
-    // 消去ボタン
-    clrBtn.addEventListener('click', clearCanvas, false);
-    // Undoボタン
-    undoBtn.addEventListener('click', undoBtnClk, false);
+    if (!readonly){
+        // canvas
+        canvas.addEventListener('mousemove', onMove, false);
+        canvas.addEventListener('mousedown', onClick, false);
+        canvas.addEventListener('mouseup', drawEnd, false);
+        canvas.addEventListener('mouseout', drawEnd, false);
+        canvas.addEventListener('touchmove', onTouchMove, false);
+        canvas.addEventListener('touchstart', onTouch, false);
+        canvas.addEventListener('touchend', drawEnd, false);    
+        // 送信ボタン
+        sendBtn.addEventListener('click', sendJson, false);
+        // 消去ボタン
+        clrBtn.addEventListener('click', clearCanvas, false);
+        // Undoボタン
+        undoBtn.addEventListener('click', undoBtnClk, false);
+    }
 
     isMouseDown = false;
 
