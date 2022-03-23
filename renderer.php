@@ -39,6 +39,7 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
         
         global $CFG;
         global $PAGE;
+        global $DB;
 
         $question = $qa->get_question();
         $currentanswer = $qa->get_last_qt_var('answer');
@@ -54,7 +55,17 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
         );
 
         $config = get_config('qtype_hwtestnlab');
+
         $api = $config->recognitionurl;
+
+        //既に解答済みのストロークを取得
+        $stroke = '';
+        $table='qtype_hwtestnlab_strokes';
+        $sql = 'SELECT strokes FROM {'.$table.'} WHERE '.$DB->sql_compare_text('answerid').' = '.$DB->sql_compare_text(':answerid');
+        $param = ['answerid' => $inputname];
+        if ($DB->record_exists_sql($sql, $param)) {
+            $stroke = array_key_first($DB->get_records_sql($sql, $param)); 
+        }
 
         if ($options->readonly) {
             $inputattributes['readonly'] = 'readonly';
@@ -114,7 +125,7 @@ class qtype_hwtestnlab_renderer extends qtype_renderer {
         // js読み込み
         $this->page->requires->js( new moodle_url($CFG->wwwroot . '/question/type/hwtestnlab/module.js'));       
         // init関数呼び出し
-        $PAGE->requires->js_init_call('init', array(array('qaId' => $inputname, 'recognitionurl' => $api)), true);
+        $PAGE->requires->js_init_call('init', array(array('qaId' => $inputname, 'recognitionurl' => $api, 'previousStroke' => $stroke)), true);
         
         // 解答欄
         if ($placeholder) {

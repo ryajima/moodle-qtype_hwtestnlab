@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="question/type/hwtestnlab/db" VERSION="20220219" COMMENT="XMLDB file for Moodle question/type/hwtestnlab"
+<XMLDB PATH="question/type/hwtestnlab/db" VERSION="20220324" COMMENT="XMLDB file for Moodle question/type/hwtestnlab"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
 >
@@ -18,13 +18,11 @@
     <TABLE NAME="qtype_hwtestnlab_strokes" COMMENT="XMLDB file for question/type/hwtestnlab. storing handwriting answers' strokes.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="qattemptid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="answerid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="strokes" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="answerid" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="strokes" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="qattemptid" TYPE="foreign" FIELDS="qattemptid" REFTABLE="question_attempts" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
   </TABLES>

@@ -22,15 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
-// データサーバ ホストアドレス（学外）
-//var hostUrl = 'https://d6y4bagh89.execute-api.ap-northeast-1.amazonaws.com/default/save-json-to-s3';
-// データサーバ ホスト（学内）
-//var hostUrl = 'https://rbk0uge9ra.execute-api.ap-northeast-1.amazonaws.com/default/save-json-to-s3-nlab';
-// 認識サーバ ホスト（学内）   
-//var recogUrl = 'http://ubuntu-z820:3000/api/v1/recognize'
-// 認識サーバ ホスト　（学外）
-//var recogUrl = 'http://0.tcp.jp.ngrok.io:12200/api/v1/recognize'
+// 認識サーバ ホストアドレス
 var recogUrl;
 
 // 認識モデル
@@ -42,7 +34,6 @@ var sendBtn;
 var clrBtn;
 var undoBtn;
 var ptnDisp;
-
 var isMouseDown;
 
 // ペンの色・太さ
@@ -53,37 +44,24 @@ var defoalpha = 1.0;
 //　ストロークオブジェクト
 var answers = {};
 
-
-// マウス継続値の初期値
-// var mouseX = "";
-// var mouseY = "";
-
-// // ストローク座標のリスト
-// var XList = [];
-// var YList = [];
-// var PList = [];
-// // ストロークフラグ
-// var isStroke = false;
-// // ストロークのオブジェクト
-// var points = [];
-
-// // 時間計測用
-// var startTime;
-// var endTime;
-
-
-// initialize
+// 変数初期化
 var initvalues;
 var inputText;
 var qaId;
+var prevStroke = {};
 function init(Y, initvariables) {
     initvalues = initvariables;
-    qaId     = initvalues.qaId;
-    recogUrl = initvalues.recognitionurl;
-    // console.log("qid：%s", qaId);
+    qaId       = initvalues.qaId;
+    recogUrl   = initvalues.recognitionurl;
+    prevStroke[qaId] = initvalues.previousStroke;
+    if (prevStroke[qaId] == ''){
+        prevStroke[qaId] = [];
+    } else {
+        prevStroke[qaId] = JSON.parse(prevStroke[qaId]);
+    }
+    console.log(prevStroke);
 
     // element
-    inputText = document.getElementById(qaId);
     canvas    = document.getElementById('canvas' +qaId);
     sendBtn   = document.getElementById('sendBtn'+qaId);
     clrBtn    = document.getElementById('clrBtn' +qaId);
@@ -117,6 +95,21 @@ function init(Y, initvariables) {
     undoBtn.addEventListener('click', undoBtnClk, false);
 
     isMouseDown = false;
+
+    // ストロークオブジェクト
+    answers[qaId] = {
+        'qaid': qaId,
+        'XList': [],
+        'YList': [],
+        'PList': [],
+        'points': prevStroke[qaId],
+        'istroke' : false,
+        'mouseX' : "",
+        'mouseY' : "",
+        'startTime' : "",
+        'endTime' : "" };
+    
+    reflesh(qaId);
 }
 
 
@@ -176,17 +169,18 @@ function onMove(e) {
 function onClick(e) {
     if (e.button === 0) {
         var qaid = e.target.id.replace('canvas', '');
-        if(!answers.hasOwnProperty(qaid)) 
-            answers[qaid] = {
-                'XList': [],
-                'YList': [],
-                'PList': [],
-                'points': [],
-                'istroke' : false,
-                'mouseX' : "",
-                'mouseY' : "",
-                'starttime' : "",
-                'endtime' : "" };
+        // if(!answers.hasOwnProperty(qaid)) 
+        //     answers[qaid] = {
+        //         'qaid': qaid,
+        //         'XList': [],
+        //         'YList': [],
+        //         'PList': [],
+        //         'points': [],
+        //         'istroke' : false,
+        //         'mouseX' : "",
+        //         'mouseY' : "",
+        //         'startTime' : "",
+        //         'endTime' : "" };
         var rect = e.target.getBoundingClientRect();
         var X = ~~(e.clientX - rect.left);
         var Y = ~~(e.clientY - rect.top);
@@ -264,8 +258,6 @@ function drawEnd(e) {
         answers[qaid].mouseY = "";
     
         if(answers[qaid].isStroke) {
-            //console.log(XList);
-            //console.log(YList);
             answers[qaid].endTime = Date.now();
             answers[qaid].points.push(answers[qaid].PList); 
             answers[qaid].isStroke = false;
@@ -281,6 +273,7 @@ function drawEnd(e) {
     //スクロール復帰
     document.removeEventListener('touchmove', handleTouchMove, { passive: false });
 }
+
 
 // 再描画
 function reflesh(qaid){
@@ -362,8 +355,7 @@ function sendJson(e){
     var canvas  = document.getElementById('canvas' + qaid);
     var ptnDisp = document.getElementById('ptnDisp'+ qaid);
     var ctx = canvas.getContext('2d');
-
-    console.log(qaid);
+    var inputText = document.getElementById(qaid);
 
     if(answers[qaid].points.length > 0){
 
@@ -386,7 +378,7 @@ function sendJson(e){
         .then((response) => response.json())
         .then((responsejson) => {
             //debug
-            console.log(JSON.stringify(responsejson));
+            //console.log(JSON.stringify(responsejson));
             
             // 認識結果表示
             let resultText = responsejson.data.result.pattern;
@@ -415,7 +407,7 @@ function sendJson(e){
         fetch('../../question/type/hwtestnlab/strokestore.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(answers[qaid].points) 
+            body: JSON.stringify(answers[qaid]) 
         })
         .then((responsemoodle) => responsemoodle.json())
         .then((responsejsonmoodle) => console.log(responsejsonmoodle))
