@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qtype_hwtestnlab';
-$plugin->version   = 2022032400;
+$plugin->version   = 2022032403;
 
 $plugin->requires  = 2021051700;
 

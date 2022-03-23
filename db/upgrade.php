@@ -112,5 +112,20 @@ function xmldb_qtype_hwtestnlab_upgrade($oldversion) {
     }
 
 
+    if ($oldversion < 2022032402) {
+
+        // Define field recognitionmodel to be added to qtype_hwtestnlab_options.
+        $table = new xmldb_table('qtype_hwtestnlab_options');
+        $field = new xmldb_field('recognitionmodel', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, '0', 'usecase');
+
+        // Conditionally launch add field recognitionmodel.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Hwtestnlab savepoint reached.
+        upgrade_plugin_savepoint(true, 2022032402, 'qtype', 'hwtestnlab');
+    }
+
     return $result;
 }

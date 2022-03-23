@@ -36,10 +36,21 @@ defined('MOODLE_INTERNAL') || die();
 class qtype_hwtestnlab_edit_form extends question_edit_form {
 
     protected function definition_inner($mform) {
+        // 他の認識モデルを追加したい場合はここに書く
+        $recog_menu = [
+            get_string('math', 'qtype_hwtestnlab'),
+            get_string('english', 'qtype_hwtestnlab'),
+        ];
+
         $menu = [
             get_string('caseno', 'qtype_hwtestnlab'),
             get_string('caseyes', 'qtype_hwtestnlab')
         ];
+
+
+        // $mform->addElement('select', 'recognitionmodel',
+        //         get_string('recogmodel', 'qtype_hwtestnlab'), $recog_menu);
+        // $mform->setDefault('usecase', $this->get_default_value('recognitionmodel', $recog_menu[0]));
 
         $mform->addElement('select', 'usecase',
                 get_string('casesensitive', 'qtype_hwtestnlab'), $menu);
